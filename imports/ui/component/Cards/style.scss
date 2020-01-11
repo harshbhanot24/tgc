@@ -1,0 +1,34 @@
+.cards {
+  .cardisplay {
+    height: 288px;
+    width: 450px;
+    background: url("/img/cards.png") no-repeat;
+    background-size: contain;
+    font-family: 'Wellfleet', cursive;
+    font-size: 25px;
+    color: #fff;
+    position: relative;
+    cursor: default;
+  }
+
+  .orgTitle {
+    float: right;
+    margin-right: 40px;
+    cursor: default;
+    margin-top: 25px;
+  }
+
+  .cardNumber {
+    position: absolute;
+    cursor: default;
+    bottom: 90px;
+    left: 50px;
+  }
+
+  .holderName {
+    position: absolute;
+    cursor: default;
+    bottom: 25px;
+    left: 50px;
+  }
+}
