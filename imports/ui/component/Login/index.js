@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
-
 import { login, resetLogin } from "../../../actions/login";
 import "./style.scss";
 
@@ -36,109 +35,133 @@ class Login extends React.Component {
   }
 
   render() {
+    const styles = { backgroundImage: `url("/assets/media/bg/bg-4.jpg")` };
     const { error, errorMessage, inProgress } = this.props.user;
     return (
-      <div class="kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
-        <div class="kt-grid kt-grid--ver kt-grid--root">
-          <div
-            class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1"
-            id="kt_login"
-          >
-            <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
-              <div
-                class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside"
-                style="background-image: url(assets/media//bg/bg-4.jpg);"
-              >
-                <div class="kt-grid__item">
-                  <a href="#" class="kt-login__logo">
-                    <img src="assets/media/logos/logo-4.png" />
-                  </a>
+      <div class="kt-grid kt-grid--ver kt-grid--root">
+        <div
+          class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1"
+          id="kt_login"
+        >
+          <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
+            <div
+              class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2  kt-grid kt-grid--hor kt-login__aside"
+              style={styles}
+            >
+              <div className="kt-grid__item">
+                <a href="#" className="kt-login__logo">
+                  <img src="/assets/media/logos/logo-4.png" />
+                </a>
+              </div>
+              <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
+                <div className="kt-grid__item kt-grid__item--middle">
+                  <h3 className="kt-login__title">
+                    Welcome to Thomas Jefferson Gold!
+                  </h3>
+                  <h4 className="kt-login__subtitle">
+                    Please Login to your account or if you don't have account,
+                    click on Sign uP to join our community.
+                  </h4>
                 </div>
-                <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
-                  <div class="kt-grid__item kt-grid__item--middle">
-                    <h3 class="kt-login__title">
-                      Welcome to Thomas Jefferson Gold!
-                    </h3>
-                    <h4 class="kt-login__subtitle">
-                      Please Login to your account or if you don't have account,
-                      click on Sign uP to join our community.
-                    </h4>
+              </div>
+              <div className="kt-grid__item">
+                <div className="kt-login__info">
+                  <div className="kt-login__copyright">
+                    &copy 2020 Thomas Jefferson Gold
                   </div>
-                </div>
-                <div class="kt-grid__item">
-                  <div class="kt-login__info">
-                    <div class="kt-login__copyright">
-                      &copy 2020 Thomas Jefferson Gold
-                    </div>
-                    <div class="kt-login__menu">
-                      <a href="#" class="kt-link">
-                        Privacy
-                      </a>
-                      <a href="#" class="kt-link">
-                        Legal
-                      </a>
-                      <a href="#" class="kt-link">
-                        Contact
-                      </a>
-                    </div>
+                  <div className="kt-login__menu">
+                    <a href="#" className="kt-link">
+                      Privacy
+                    </a>
+                    <a href="#" className="kt-link">
+                      Legal
+                    </a>
+                    <a href="#" className="kt-link">
+                      Contact
+                    </a>
                   </div>
                 </div>
               </div>
-              <div class="kt-grid__item kt-grid__item--fluid  kt-grid__item--order-tablet-and-mobile-1  kt-login__wrapper">
-                <div class="kt-login__head">
-                  <span class="kt-login__signup-label">
-                    Don't have an account yet?
-                  </span>
-                  &nbsp;&nbsp;
-                  <a href="#" class="kt-link kt-login__signup-link">
-                    Sign Up!
-                  </a>
-                </div>
+            </div>
+            <div className="kt-grid__item kt-grid__item--fluid  kt-grid__item--order-tablet-and-mobile-1  kt-login__wrapper">
+              <div className="kt-login__head">
+                <span className="kt-login__signup-label">
+                  Don't have an account yet?
+                </span>
+                &nbsp;&nbsp;
+                <Link to="/register" className="kt-link kt-login__signup-link">
+                  Sign Up!
+                </Link>
+              </div>
 
-                <div class="kt-login__body">
-                  <div class="kt-login__form">
-                    <div class="kt-login__title">
-                      <h3>Sign In</h3>
+              <div className="kt-login__body">
+                <div className="kt-login__form">
+                  <div className="kt-login__title">
+                    <h3>Sign In</h3>
+                  </div>
+
+                  <form
+                    className="kt-form"
+                    onSubmit={this.handleLogin.bind(this)}
+                  >
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="Email"
+                        name="email"
+                        value={this.state.email}
+                        onChange={e => {
+                          this.setState({ email: e.target.value });
+                        }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={e => {
+                          this.setState({ password: e.target.value });
+                        }}
+                      />
                     </div>
 
-                    <form class="kt-form" action="" novalidate="novalidate">
-                      <div class="form-group">
-                        <input
-                          class="form-control"
-                          type="text"
-                          placeholder="Email"
-                          name="email"
-                          autocomplete="off"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <input
-                          class="form-control"
-                          type="password"
-                          placeholder="Password"
-                          name="password"
-                        />
-                      </div>
-
-                      <div class="kt-login__actions">
-                        <a href="#" class="kt-link kt-login__link-forgot">
-                          Forgot Password ?
-                        </a>
-                        <button
-                          id="kt_login_signin_submit"
-                          class="btn btn-primary btn-elevate kt-login__btn-primary"
+                    <div className="kt-login__actions">
+                      <Link
+                        to="/forgot"
+                        className="kt-link kt-login__link-forgot"
+                      >
+                        Forgot Password ?
+                      </Link>
+                      <button
+                        id="kt_login_signin_submit"
+                        className="btn btn-primary btn-elevate kt-login__btn-primary"
+                        disabled={inProgress}
+                        type="submit"
+                      >
+                        Sign In
+                      </button>
+                    </div>
+                    {error ? (
+                      <div>
+                        <span
+                          id="login-alert"
+                          className="alert alert-danger col-sm-12"
                         >
-                          Sign In
-                        </button>
+                          {errorMessage}
+                        </span>
                       </div>
-                    </form>
+                    ) : null}
+                  </form>
 
-                    <div class="kt-login__divider">
-                      <div class="kt-divider">
-                        <span></span>
-                        <span>OR</span>
-                        <span></span>
-                      </div>
+                  <div className="kt-login__divider">
+                    <div className="kt-divider">
+                      <span></span>
+                      <span>OR</span>
+                      <span></span>
                     </div>
                   </div>
                 </div>
@@ -149,6 +172,7 @@ class Login extends React.Component {
       </div>
     );
   }
+}
 const LoginContainer = withTracker(props => ({
   userData: Meteor.user()
 }))(Login);
