@@ -91,9 +91,9 @@ class Forgot extends React.Component {
                   Already have an account?
                 </span>
                 &nbsp;&nbsp;
-                <a href="#" className="kt-link kt-login__signup-link">
+                <Link to="/login" className="kt-link kt-login__signup-link">
                   Sign In!
-                </a>
+                </Link>
               </div>
 
               <div className="kt-login__body">
