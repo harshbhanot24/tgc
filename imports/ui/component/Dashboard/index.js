@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
       password: ''
     }
   }
-  componentWillMount() {
+  componentDidMount() {
 
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0;
@@ -34,11 +34,11 @@ class Dashboard extends React.Component {
     // this.props.getTodayTJSent();
     // this.props.getTodayTJReceive();
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.profile && !nextProps.profile.fullname) {
-      nextProps.history.push('/profile');
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.profile && !nextProps.profile.fullname) {
+  //     nextProps.history.push('/profile');
+  //   }
+  // }
   handleLogin(e) {
     e.preventDefault();
     const email = this.state.email;
@@ -160,14 +160,14 @@ class Dashboard extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div >
-                  <table >
+                <div className="kt-portlet__body kt-portlet__body--fit">
+                  <table className="kt-datatable" id="html_table" width="100%">
                     <thead>
                       <tr>
-                        <th >Transaction ID</th>
-                        <th >From</th>
-                        <th >To</th>
-                        <th >Date</th>
+                        <th title="Field #1">Transaction ID</th>
+                        <th title="Field #2">From</th>
+                        <th title="Field #3">To</th>
+                        <th title="Field #6">Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -183,7 +183,7 @@ class Dashboard extends React.Component {
                         <td>Jimmy</td>
                         <td>2017-04-29</td>
                       </tr>
-                      {transaction.map((data, i) => {
+                      {/* {transaction.map((data, i) => {
                         return (
                           <tr key={i}>
                             <td>
@@ -205,7 +205,7 @@ class Dashboard extends React.Component {
                         </tr>
                       ) : (
                         "null"
-                      )}
+                      )} */}
                     </tbody>
                   </table>
                 </div>
