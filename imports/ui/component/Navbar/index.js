@@ -137,34 +137,30 @@ class Navbar extends React.Component {
                         className={this.isActive("/cards")}
                         aria-haspopup="true"
                       >
-                        <a href="index.html" className="kt-menu__link ">
-                          <span className="kt-menu__link-text">
-                            <Link to="/cards">Cards</Link>
-                          </span>
+                        <Link to="/cards" className="kt-menu__link ">
+                          <span className="kt-menu__link-text">Cards</span>
                           <i className="kt-menu__hor-arrow la la-money"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li
                         className={this.isActive("/buy")}
                         aria-haspopup="true"
                       >
-                        <a href="index.html" className="kt-menu__link ">
-                          <span className="kt-menu__link-text">
-                            <Link to="/buy">Buy Gold</Link>
-                          </span>
+                        <Link to="/buy" className="kt-menu__link ">
+                          <span className="kt-menu__link-text">Buy Gold</span>
                           <i className="kt-menu__hor-arrow la la-cart-plus"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li
                         className={this.isActive("/send")}
                         aria-haspopup="true"
                       >
-                        <a href="index.html" className="kt-menu__link ">
+                        <Link to="/send" className="kt-menu__link ">
                           <span className="kt-menu__link-text">
-                            <Link to="/send">Transfer</Link>
+                            Transfer
                           </span>
                           <i className="kt-menu__hor-arrow la la-exchange"></i>
-                        </a>
+                        </Link>
                       </li>
                       <li className="kt-menu__item" aria-haspopup="true">
                         <a style={style.border} className="kt-menu__link ">
@@ -215,10 +211,10 @@ class Navbar extends React.Component {
                           />
 
                           <span className="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">
-                            {fullname ? fullname.charAt(0).toUpperCase():null}
+                            {fullname ? fullname.charAt(0).toUpperCase() : null}
                           </span>
                         </div>
-    <div className="kt-user-card__name">{fullname}</div>
+                        <div className="kt-user-card__name">{fullname}</div>
                       </div>
 
                       <div className="kt-notification">

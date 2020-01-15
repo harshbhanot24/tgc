@@ -13,7 +13,6 @@ import Router from '../router';
 import 'react-notifications/lib/notifications.css';
 import '../style.css'
 import '../custom.css'
-import 'bootstrap3/dist/js/bootstrap.min';
 
 export default class AdminLayout extends React.Component {
 

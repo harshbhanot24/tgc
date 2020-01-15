@@ -99,7 +99,6 @@ class Router extends React.Component {
     let staff = mUser && mUser.profile.staff;
     if (!mUser) {
       return (
-        <AppLayout>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
@@ -157,7 +156,6 @@ class Router extends React.Component {
             />
             <Route component={Home} />
           </Switch>
-        </AppLayout>
       );
     } else if (role === "admin") {
       return (
