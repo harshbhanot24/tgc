@@ -5,27 +5,67 @@ import { withTracker } from "meteor/react-meteor-data";
 import { login, resetLogin } from "../../../actions/login";
 import "./style.scss";
 
+
+
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
+const validateForm = errors => {
+  let valid = true;
+  Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+  return valid;
+};
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "" };
+    this.state = { email: "", password: "",
+      errors: {
+        email: "",
+        password: ""
+      }
+    };
   }
 
+  handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'email': 
+        errors.email =
+          validEmailRegex.test(value)
+            ? ''
+            : 'Email is not valid!';
+        break;
+      case 'password': 
+        errors.password = 
+          value.length < 8
+            ? 'Password must be 8 characters long!'
+            : '';
+        break;
+      default:
+        break;
+    }
+
+    this.setState({errors, [name]: value});
+  }
   componentWillMount() {
     const { resetLogin } = this.props;
     resetLogin();
   }
-
-  handleLogin(e) {
-    e.preventDefault();
-    const { email } = this.state;
-    const { password } = this.state;
-    this.props.login({
-      email,
-      password
-    });
-  }
-
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if(validateForm(this.state.errors)) {
+      const {email, password} = this.state;
+      this.props.login({
+        email,
+        password
+      });
+    }else{
+      console.error('Invalid Form')
+    }
+    }
   componentWillReceiveProps(nextProps) {
     if (!this.props.user.error && nextProps.user.error) {
       this.setState({
@@ -35,10 +75,20 @@ class Login extends React.Component {
   }
 
   render() {
+    const { errors } = this.state;
     const styles = { backgroundImage: `url("/assets/media/bg/bg-4.jpg")` };
     const { error, errorMessage, inProgress } = this.props.user;
+    const fullSizeDiv={ 
+    width: "100%",
+    minHeight: "100vh",
+    maxHeight: "100%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    margin: "0 auto"
+}
     return (
-      <div className="kt-grid kt-grid--ver kt-grid--root">
+      <div className="kt-grid kt-grid--ver kt-grid--root" style={fullSizeDiv}>
         <div
           className="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1"
           id="kt_login"
@@ -100,10 +150,7 @@ class Login extends React.Component {
                     <h3>Sign In</h3>
                   </div>
 
-                  <form
-                    className="kt-form"
-                    onSubmit={this.handleLogin.bind(this)}
-                  >
+                  <form className="kt-form" onSubmit={this.handleSubmit}>
                     <div className="form-group">
                       <input
                         className="form-control"
@@ -111,11 +158,13 @@ class Login extends React.Component {
                         placeholder="Email"
                         name="email"
                         value={this.state.email}
-                        onChange={e => {
-                          this.setState({ email: e.target.value });
-                        }}
+                        onChange={this.handleChange}
+                        noValidate
                       />
                     </div>
+                    {errors.email.length > 0 && (
+                      <span className="error">{errors.email}</span>
+                    )}
                     <div className="form-group">
                       <input
                         className="form-control"
@@ -123,10 +172,12 @@ class Login extends React.Component {
                         placeholder="Password"
                         name="password"
                         value={this.state.password}
-                        onChange={e => {
-                          this.setState({ password: e.target.value });
-                        }}
+                        onChange={this.handleChange}
+                        noValidate
                       />
+                      {errors.password.length > 0 && (
+                        <span className="error">{errors.password}</span>
+                      )}
                     </div>
 
                     <div className="kt-login__actions">

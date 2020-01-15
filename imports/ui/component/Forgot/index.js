@@ -38,8 +38,17 @@ class Forgot extends React.Component {
   render() {
     const { error, errorMessage, inProgress } = this.props.forgotPassword;
     const styles = { backgroundImage: `url("/assets/media/bg/bg-4.jpg")` };
+    const fullSizeDiv = {
+      width: "100%",
+      minHeight: "100vh",
+      maxHeight: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      margin: "0 auto"
+    };
     return (
-      <div className="kt-grid kt-grid--ver kt-grid--root">
+      <div className="kt-grid kt-grid--ver kt-grid--root" style={fullSizeDiv}>
         <div
           className="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1"
           id="kt_login"
