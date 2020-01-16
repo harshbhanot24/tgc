@@ -23,13 +23,15 @@ export function resetRegister() {
   }
 }
 export function register(data) {
+  console.log('data: ', data);
+ if(data){
   return dispatch => {
     dispatch({
       type: REGISTER_BEGIN
     })
     const email = data.email;
     const password = data.password;
-    const cPassword = data.cPassword;
+    const cPassword = data.cpasswd;
     const membership = 'gold';
     const merchantRequest = data.merchant;
     if (!isValidEmailAddress(email)) {
@@ -69,4 +71,5 @@ export function register(data) {
     });
 
   }
+}
 }

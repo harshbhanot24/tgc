@@ -11,6 +11,7 @@ import { Profile } from '../../../collections/Profile';
 import { ExtraSpot } from '../../../collections/ExtraSpot';
 import { Money } from '../../../collections/Money';
 import { Gold } from '../../../collections/Gold';
+import Reusabletable from '../utils/table';
 // import { getTodayTJSent, getTodayTJReceive } from '../../../actions/login';
 
 import UTILS from '../../../util'
@@ -161,54 +162,8 @@ class Dashboard extends React.Component {
                   </div>
                 </div>
                 <div className="kt-portlet__body kt-portlet__body--fit">
-                  <table className="kt-datatable" id="html_table" width="100%">
-                    <thead>
-                      <tr>
-                        <th title="Field #1">Transaction ID</th>
-                        <th title="Field #2">From</th>
-                        <th title="Field #3">To</th>
-                        <th title="Field #6">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>0006-3629</td>
-                        <td>Land Rover</td>
-                        <td>Range Rover</td>
-                        <td>2016-11-28</td>
-                      </tr>
-                      <tr>
-                        <td>66403-315</td>
-                        <td>GMC</td>
-                        <td>Jimmy</td>
-                        <td>2017-04-29</td>
-                      </tr>
-                      {/* {transaction.map((data, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>
-                              <Link to={"/transaction/" + data._id}>
-                                {data._id}
-                              </Link>
-                            </td>
-                            <td>{`${data.FromName}(${data.FromCard}) sent ${data.Fromgold}`}</td>
-                            <td>{`${data.ToName}(${data.ToCard}) received ${data.Togold}`}</td>
-                            <td>{moment(data.Date).format("LLL")}</td>
-                          </tr>
-                        );
-                      })}
-                      {transaction.length === 0 ? (
-                        <tr>
-                          <td colSpan="7" className="text-center">
-                            No Transaction Done
-                          </td>
-                        </tr>
-                      ) : (
-                        "null"
-                      )} */}
-                    </tbody>
-                  </table>
-                </div>
+                <Reusabletable></Reusabletable>
+                  </div>
               </div>
             </div>
             <div className="col-lg-2"></div>

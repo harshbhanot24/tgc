@@ -44,6 +44,8 @@
     "react-addons-pure-render-mixin": "^15.6.2",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-modal": "^4.1.1",
+    "react-bootstrap-table-next": "^3.3.3",
+    "react-bootstrap-table2-paginator": "^2.1.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-datepicker": "^1.5.0",
     "react-dom": "^16.12.0",
