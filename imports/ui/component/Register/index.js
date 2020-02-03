@@ -91,8 +91,18 @@ class Register extends React.Component {
       !nextProps.register.inProgress &&
       nextProps.register.successMessage
     ) {
-      document.getElementById("signupform").reset();
-      nextProps.history.push("/register/success");
+      this.setState({
+        email: "",
+        password: "",
+        cpasswd: "",
+        merchant: false,
+        errors: {
+          email: "",
+          cpasswd: "",
+          password: ""
+        }
+      });
+      // nextProps.history.push("/register/success"); 
     }
   }
   render() {

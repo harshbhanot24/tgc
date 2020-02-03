@@ -1,6 +1,7 @@
 import BootstrapTable from "react-bootstrap-table-next";
 import React from "react";
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 const Reusabletable = props => {
   const {
     data,
@@ -38,7 +39,7 @@ const options = {
   }] // A numeric array is also available. the purpose of above example is custom the text
 };
 return(
-<BootstrapTable keyField='id' data={ data } columns={ columns } pagination={ paginationFactory(options) } />
+<BootstrapTable keyField='_id' data={ data } bordered={ false}columns={ columns } pagination={ paginationFactory(options) } />
 );
 }
   export default Reusabletable;

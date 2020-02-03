@@ -44,7 +44,7 @@ export function register(data) {
     if (!isValidPassword(password, email)) {
       dispatch({
         type: REGISTER_FAILED,
-        errorMessage: 'Passowrd must be atleast 7 character long alphanumeric.'
+        errorMessage: 'Password must be atleast 7 character long alphanumeric.'
       });
       return;
     }
