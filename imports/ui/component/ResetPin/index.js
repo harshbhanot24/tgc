@@ -34,51 +34,58 @@ class ResetPin extends React.Component {
   render() {
     const {error, errorMessage, inProgress, successMessage} = this.props.card;
     return (
-      <div className="container">
-        <div id="resetPinbox" style={{marginTop:"50px"}} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-          <div className="panel panel-info">
-              <div className="panel-heading">
-                <div className="panel-title">Reset Pin</div>
+    		<div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+						<div className="kt-content  kt-grid__item kt-grid__item--fluid" id="kt_content">
+							<div className="row">
+								<div className="col-lg-2"></div>
+								<div className="col-lg-8 col-md-8 col-sm-12">
+									<div className="kt-portlet">
+										<div className="kt-portlet__head">
+											<div className="kt-portlet__head-label">
+												<h3 className="kt-portlet__head-title">
+													Reset Pin
+												</h3>
+											</div>
+										</div>
+										<form className="kt-form" id="resetPinform" onSubmit={this.handleSubmit.bind(this)}>
+											<div className="kt-portlet__body">
+												<div className="form-group form-group-last">
+												{	error && <div className="alert alert-secondary" role="alert">
+														<div className="alert-icon"><i className="flaticon-warning kt-font-brand"></i></div>
+														<div className="alert-text">
+														{errorMessage}
+														</div>
+													</div>}
+												</div>
+												<div className="form-group">
+													<label for="exampleInputPassword1">Your Account Password</label>
+													<input type="password" className="form-control" name="passwd" id="exampleInputPassword1" placeholder="Password"/>
+												</div>
+												<div className="form-group">
+													<label for="exampleInputPassword1">New Pin</label>
+													<input type="password" className="form-control" id="exampleInputPassword1" name="pin" placeholder="Pin"/>
+												</div>
+												<div className="form-group">
+													<label for="exampleInputPassword1">Confirm New Pin</label>
+													<input type="password" className="form-control" id="exampleInputPassword1" name="cpin" placeholder="Confirm Pin"/>
+												</div>
+											</div>
+											<div className="kt-portlet__foot">
+												<div className="kt-form__actions">
+													<button type="submit" className="btn btn-primary">Set New Pin</button>
+													<button type="reset" className="btn btn-secondary">Cancel</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div className="col-lg-2"></div>
+
+
+							</div>
               </div>
-              <div style={{paddingTop:"30px"}} className="panel-body">
-                {
-                  error?
-                  <div>
-                    <span className="alert alert-danger col-sm-12">{errorMessage}</span>
-                  </div>
-                  :
-                  null
-                }
-                <form id="resetPinform" onSubmit={this.handleSubmit.bind(this)} className="form-horizontal" role="form" method="post" >
-                  <div className="form-group">
-                    <label htmlFor="password" className="col-md-3 control-label">Your Account Password</label>
-                    <div className="col-md-9">
-                        <input type="password" required className="form-control" name="passwd" placeholder="Password" />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                      <label htmlFor="cpassword" className="col-md-3 control-label">New Pin</label>
-                      <div className="col-md-9">
-                          <input type="password" required className="form-control" name="pin" placeholder="NEW PIN" maxLength="4" />
-                      </div>
-                  </div>
-                  <div className="form-group">
-                      <label htmlFor="cpassword" className="col-md-3 control-label">Confirm New Pin</label>
-                      <div className="col-md-9">
-                          <input type="password" required className="form-control" name="cpin" placeholder="Confirm Pin" maxLength="4" />
-                      </div>
-                  </div>
-                  <div className="form-group">
-                      <div className="col-md-offset-3 col-md-9">
-                          <button id="btn-signup" type="submit" className="btn btn-warning btn"><i className="icon-hand-right"></i>Set Pin</button>
-                      </div>
-                  </div>
-                </form>
-            </div>
-        </div>
-      </div>
-    </div>
-    )
+              </div>
+							)
   }
 }
 

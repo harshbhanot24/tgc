@@ -11,22 +11,64 @@ import { Profile } from '../../../collections/Profile';
 import { ExtraSpot } from '../../../collections/ExtraSpot';
 import { Money } from '../../../collections/Money';
 import { Gold } from '../../../collections/Gold';
+import Reusabletable from "../utils/table";
 // import { getTodayTJSent, getTodayTJReceive } from '../../../actions/login';
 
 import UTILS from '../../../util'
 
 import './style.scss';
+import GoldData from '../goldData';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: ""
+    };
   }
-  componentDidMount() {
+  products = [];
+  formatDate = (cell, row) => {
+    console.log("formatDatecell: ", cell);
+    return moment(cell).format("LLL");
+  };
 
+  formatFrom = (cell, row) => {
+    console.log("cell: ", cell);
+    return (
+      <span>{`${cell.FromName}(${cell.FromCard}) sent ${cell.Fromgold}`}</span>
+    );
+  };
+  formatTo = (cell, row) => {
+    console.log("cell: ", cell);
+    return (
+      <span>
+        {`${cell.ToName}(${cell.ToCard}) received ${cell.Togold}`}
+      </span>
+    );
+  };
+  columns = [
+    {
+      dataField: "data",
+      text: "From",
+      formatter: this.formatFrom
+    },
+    {
+      dataField: "data",
+      text: "To",
+      formatter: this.formatTo
+    },
+    {
+      dataField: "data._id",
+      text: "TransactionID"
+    },
+    {
+      dataField: "data.Date",
+      text: "Date",
+      formatter: this.formatDate
+    }
+  ];
+  componentDidMount() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0;
     // Meteor.subscribe('profile');
@@ -46,17 +88,174 @@ class Dashboard extends React.Component {
     this.props.login({
       email,
       password
-    })
+    });
   }
   render() {
-    const { money, profile, extraSpot, gold, user, transaction } = this.props;
-    let userGold = '';
-    if (money)
-      userGold = parseFloat(money.gold);
-    const goldValue = gold ? parseFloat(gold.data) : '';
+    const { money, profile, extraSpot, gold, user } = this.props;
+    const transaction = [
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "ROndsafRam",
+          Fromgold: "gold form",
+          ToName: "fdsaf",
+          ToCard: "dsafasd",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 132
+        }
+      },
+
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },
+      {
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      },{
+        data: {
+          FromName: "harsh",
+          FromCard: "RAJ",
+          Fromgold: "gold form",
+          ToName: "harsh",
+          ToCard: "dsafsda",
+          Togold: "gold form",
+          Date: "01-12-1998",
+          _id: 13233
+        }
+      }
+    ];
+    let userGold = "";
+    if (money) userGold = parseFloat(money.gold);
+    const goldValue = gold ? parseFloat(gold.data) : "";
     let getTJBalanceUSD;
-    if (goldValue && userGold !== '' && extraSpot) {
-      const totalTJ = (userGold * goldValue) * extraSpot.multiplier;
+    if (goldValue && userGold !== "" && extraSpot) {
+      const totalTJ = userGold * goldValue * extraSpot.multiplier;
       getTJBalanceUSD = UTILS.currencyFormat(parseFloat(totalTJ).toFixed(2));
     }
     const todayTJSent = user.todayTJSent;
@@ -70,74 +269,12 @@ class Dashboard extends React.Component {
           <div className="row">
             <div className="col-lg-2"></div>
             <div className="col-lg-8 col-md-8 col-sm-12">
-              <div className="kt-portlet">
-                <div className="kt-portlet__body  kt-portlet__body--fit">
-                  <div className="row row-no-padding row-col-separator-xl">
-                    <div className="col-md-12 col-lg-6 col-xl-3">
-                      <div className="kt-widget24">
-                        <div className="kt-widget24__details">
-                          <div className="kt-widget24__info">
-                            <h4 className="kt-widget24__title">Gold Balance</h4>
-                            <span className="kt-widget24__desc">
-                              in ounce(s)
-                            </span>
-                          </div>
-                          <span className="kt-widget24__stats kt-font-brand">
-                            {userGold !== ""
-                              ? userGold.toFixed(5)
-                              : "Loading..."}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-12 col-lg-6 col-xl-3">
-                      <div className="kt-widget24">
-                        <div className="kt-widget24__details">
-                          <div className="kt-widget24__info">
-                            <h4 className="kt-widget24__title">
-                              Gold Dollar Balance
-                            </h4>
-                            <span className="kt-widget24__desc">Converted</span>
-                          </div>
-                          <span className="kt-widget24__stats kt-font-warning">
-                            {getTJBalanceUSD !== undefined
-                              ? getTJBalanceUSD
-                              : "Loading..."}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-12 col-lg-6 col-xl-3">
-                      <div className="kt-widget24">
-                        <div className="kt-widget24__details">
-                          <div className="kt-widget24__info">
-                            <h4 className="kt-widget24__title">Amount Sent</h4>
-                            <span className="kt-widget24__desc">Today</span>
-                          </div>
-                          <span className="kt-widget24__stats kt-font-danger">
-                            {todayTJSent}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-12 col-lg-6 col-xl-3">
-                      <div className="kt-widget24">
-                        <div className="kt-widget24__details">
-                          <div className="kt-widget24__info">
-                            <h4 className="kt-widget24__title">
-                              Amount Recieved
-                            </h4>
-                            <span className="kt-widget24__desc">Today</span>
-                          </div>
-                          <span className="kt-widget24__stats kt-font-success">
-                            {todayTJReceive}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <GoldData
+                userGold={userGold}
+                getTJBalanceUSD={getTJBalanceUSD}
+                todayTJSent={todayTJSent}
+                todayTJReceive={todayTJReceive}
+              />
               <div className="kt-portlet kt-portlet--mobile">
                 <div className="kt-portlet__head kt-portlet__head--lg">
                   <div className="kt-portlet__head-label">
@@ -149,65 +286,23 @@ class Dashboard extends React.Component {
                   <div className="kt-portlet__head-toolbar">
                     <div className="kt-portlet__head-wrapper">
                       <div className="kt-portlet__head-actions">
-                        <a
-                          href="#"
+                        <Link
+                           to="/transaction"
                           className="btn btn-brand btn-elevate btn-icon-sm"
                         >
                           <i className="la la-file-image-o"></i>
                           Transaction Statements
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="kt-portlet__body kt-portlet__body--fit">
-                  <table className="kt-datatable" id="html_table" width="100%">
-                    <thead>
-                      <tr>
-                        <th title="Field #1">Transaction ID</th>
-                        <th title="Field #2">From</th>
-                        <th title="Field #3">To</th>
-                        <th title="Field #6">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>0006-3629</td>
-                        <td>Land Rover</td>
-                        <td>Range Rover</td>
-                        <td>2016-11-28</td>
-                      </tr>
-                      <tr>
-                        <td>66403-315</td>
-                        <td>GMC</td>
-                        <td>Jimmy</td>
-                        <td>2017-04-29</td>
-                      </tr>
-                      {/* {transaction.map((data, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>
-                              <Link to={"/transaction/" + data._id}>
-                                {data._id}
-                              </Link>
-                            </td>
-                            <td>{`${data.FromName}(${data.FromCard}) sent ${data.Fromgold}`}</td>
-                            <td>{`${data.ToName}(${data.ToCard}) received ${data.Togold}`}</td>
-                            <td>{moment(data.Date).format("LLL")}</td>
-                          </tr>
-                        );
-                      })}
-                      {transaction.length === 0 ? (
-                        <tr>
-                          <td colSpan="7" className="text-center">
-                            No Transaction Done
-                          </td>
-                        </tr>
-                      ) : (
-                        "null"
-                      )} */}
-                    </tbody>
-                  </table>
+                  <Reusabletable
+                    keyField="_id"
+                    data={transaction}
+                    columns={this.columns}
+                  ></Reusabletable>
                 </div>
               </div>
             </div>
