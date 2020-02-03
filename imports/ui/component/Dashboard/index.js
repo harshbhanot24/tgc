@@ -286,13 +286,13 @@ class Dashboard extends React.Component {
                   <div className="kt-portlet__head-toolbar">
                     <div className="kt-portlet__head-wrapper">
                       <div className="kt-portlet__head-actions">
-                        <a
-                          href="#"
+                        <Link
+                           to="/transaction"
                           className="btn btn-brand btn-elevate btn-icon-sm"
                         >
                           <i className="la la-file-image-o"></i>
                           Transaction Statements
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
