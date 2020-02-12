@@ -29,8 +29,8 @@ class Buy extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.buy.inProgress && !nextProps.buy.inProgress && nextProps.buy.successMessage) {
       document.getElementById("purchaseGold").reset();
-      setTimeout(this.redirectToBuy(), 3000);
-      this.setState({requestSuccess:true})
+    NotificationManager.success("Purchase request recieved successfully","",30000);
+    nextProps.history.push("/");
     }
   }
   

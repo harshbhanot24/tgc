@@ -1,43 +1,51 @@
-import React from 'react';
-import {
-  Meteor
-} from 'meteor/meteor'
-import FileSaver from 'file-saver';
-import converter from 'json-2-csv';
+import React from "react";
+import { Meteor } from "meteor/meteor";
+import FileSaver from "file-saver";
+import converter from "json-2-csv";
 import { NotificationManager } from "react-notifications";
-import moment from 'moment';
-import { connect } from 'react-redux'
-import {Link} from 'react-router-dom';
-import { withTracker } from 'meteor/react-meteor-data';
-import DatePicker from 'react-16-bootstrap-date-picker';
-import { login } from '../../../actions/login';
-import { Profile } from '../../../collections/Profile';
-import { ExtraSpot } from '../../../collections/ExtraSpot';
-import { Money } from '../../../collections/Money';
-import { Gold } from '../../../collections/Gold';
-import { emailSubscribe, emailUnsubscribe } from '../../../actions/profile';
+import moment from "moment";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { withTracker } from "meteor/react-meteor-data";
+import DatePicker from "react-16-bootstrap-date-picker";
+import { login } from "../../../actions/login";
+import { Profile } from "../../../collections/Profile";
+import { ExtraSpot } from "../../../collections/ExtraSpot";
+import { Money } from "../../../collections/Money";
+import { Gold } from "../../../collections/Gold";
+import { emailSubscribe, emailUnsubscribe } from "../../../actions/profile";
+import Reusabletable from "../utils/table";
 
-import UTILS from '../../../util'
+import UTILS from "../../../util";
 
-import './style.scss';
-
+import "./style.scss";
 
 const prepareData = function(transactions) {
-  return transactions.map(transaction=>{
+  return transactions.map(transaction => {
     return {
       TransactionID: transaction._id,
       From: `${transaction.FromName}(${transaction.FromCard}) sent ${transaction.Fromgold} (Gold Dollar)`,
-      To: `${transaction.ToName || 'unknown'} (${transaction.ToCard}) received ${transaction.Togold} (Gold Dollar)`,
-      Date: moment(transaction.Date).format('LLL'),
+      To: `${transaction.ToName || "unknown"} (${
+        transaction.ToCard
+      }) received ${transaction.Togold} (Gold Dollar)`,
+      Date: moment(transaction.Date).format("LLL"),
       remarks: transaction.remarks
-    }
-  })
-}
+    };
+  });
+};
 const preparePDFRow = function(transactions) {
-  return transactions.map(transaction=>{
-    return [transaction._id,`${transaction.FromName}(${transaction.FromCard}) sent ${transaction.Fromgold} (Gold Dollar)`,`${transaction.ToName || 'unknown'} (${transaction.ToCard}) received ${transaction.Togold} (Gold Dollar)`, moment(transaction.Date).format('LLL'), transaction.remarks]
-  })
-}
+  return transactions.map(transaction => {
+    return [
+      transaction._id,
+      `${transaction.FromName}(${transaction.FromCard}) sent ${transaction.Fromgold} (Gold Dollar)`,
+      `${transaction.ToName || "unknown"} (${transaction.ToCard}) received ${
+        transaction.Togold
+      } (Gold Dollar)`,
+      moment(transaction.Date).format("LLL"),
+      transaction.remarks
+    ];
+  });
+};
 class Transaction extends React.Component {
   constructor(props) {
     super(props);
@@ -50,117 +58,190 @@ class Transaction extends React.Component {
       endDate: moment().toISOString(),
       showHTMLTransaction: false,
       userTransactions: []
-    }
+    };
   }
+  formatDate = (cell, row) => {
+    return moment(cell).toString();
+  };
+  columns = [
+    {
+      dataField: "FromName",
+      text: "From"
+    },
+    {
+      dataField: "ToName",
+      text: "To"
+    },
+    {
+      dataField: "_id",
+      text: "TransactionID"
+    },
+    {
+      dataField: "Date",
+      text: "Date",
+      formatter: this.formatDate
+    }
+  ];
+
   componentWillMount() {
     const self = this;
-    Meteor.call('getLast30Record',function(err,res){
-      this.setState({
+    Meteor.call("getLast30Record", function(err, res) {
+      self.setState({
         last30Gold: res.gold.toFixed(5),
         last30Silver: res.silver.toFixed(5),
         last30Tjsc: res.tjsc,
         last30Tjsd: res.tjsd
-      })
-    })
+      });
+    });
   }
   componentWillReceiveProps(nextProps) {
-    if(nextProps.profile && !nextProps.profile.fullname) {
-      nextProps.history.push('/profile');
+    if (nextProps.profile && !nextProps.profile.fullname) {
+      nextProps.history.push("/profile");
     }
   }
-  getRequestedTransaction(mode, e) {
+  getRequestedTransaction = (mode, e) => {
     const self = this;
     let startDate = moment(this.state.startDate);
     let endDate = moment(this.state.endDate);
     let profile = this.props.profile;
-    let money = this.props.money;
-    if(endDate < startDate){
-      NotificationManager.success("Please Select Valid End Date","",5000);
+    let {money={}} = this.props;
+    let cardNumber="";
+    if(money && money.cards){
+      cardNumber= money.cards;
+    }
+    if (endDate < startDate) {
+      NotificationManager.success("Please Select Valid End Date", "", 5000);
       return;
     }
-    let diffMonths = startDate.diff(endDate, 'months');
-    if(diffMonths > 3) {
-      NotificationManager.success("You can request maximum 3 month at at time.","",5000);
+    let diffMonths = startDate.diff(endDate, "months");
+    if (diffMonths > 3) {
+      NotificationManager.success(
+        "You can request maximum 3 month at at time.",
+        "",
+        5000
+      );
       return;
     }
     let refine = {
-        startDate: new Date(startDate.startOf('day')),
-        endDate: new Date(endDate.endOf('day')),
-        member: 'g'
+      startDate: new Date(startDate.startOf("day")),
+      endDate: new Date(endDate.endOf("day")),
+      member: "g"
     };
-    if(mode === 'csv')
+    if (mode === "csv")
       self.setState({
         csvDisable: true
-      })
+      });
 
-    Meteor.call('getUserTransaction', Meteor.userId(), 0, null, refine,"", function(error, result) {
-      if(mode === 'csv'){
+    Meteor.call(
+      "getUserTransaction",
+      Meteor.userId(),
+      0,
+      null,
+      refine,
+      "",
+      function(error, result) {
         let _data = prepareData(result);
-        let data = converter.json2csv(_data,function(err, csv) {
-          if(err) {
-            NotificationManager.error('Something Went Wrong! Please Try Again Later.')
-            return;
-          } else {
-            let blob = new Blob([csv], {
-                    type: "text/plain;charset=utf-8;",
-              });
-            FileSaver.saveAs(blob, "Transaction-" + startDate.format('MM/DD/YYYY') + "-" + endDate.format('MM/DD/YYYY') + "-" + new Date().getTime() + ".csv");
-          }
-        },{
-          emptyFieldValue: '',
-        })
-      } //end of csv generation
+        if (mode === "csv") {
+          let data = converter.json2csv(
+            _data,
+            function(err, csv) {
+              if (err) {
+                NotificationManager.error(
+                  "Something Went Wrong! Please Try Again Later."
+                );
+                return;
+              } else {
+                let blob = new Blob([csv], {
+                  type: "text/plain;charset=utf-8;"
+                });
+                FileSaver.saveAs(
+                  blob,
+                  "Transaction-" +
+                    startDate.format("MM/DD/YYYY") +
+                    "-" +
+                    endDate.format("MM/DD/YYYY") +
+                    "-" +
+                    new Date().getTime() +
+                    ".csv"
+                );
+              }
+            },
+            {
+              emptyFieldValue: ""
+            }
+          );
+        } //end of csv generation
+        // else if(mode==='pdf')
 
-      self.setState({
-        showHTMLTransaction: mode === 'html'? true: false,
-        userTransactions: result,
-        csvDisable: false
-      },()=>{
-        if(mode === 'pdf') {
-          let HTML2PDF = function demoFromHTML() {
-              let doc = new jsPDF('p', 'pt');
-              let name = profile.fullname;
-              let address = profile.address + ", " + profile.city + ", " + profile.state + ", " + profile.zip;
-              let phone = Profile.findOne().phone;
-              let mem = 'Gold';
-              doc.setFontSize(16);
-              doc.text("Texas Gold Card", 26, 50);
-              doc.setFontSize(14);
-              doc.text("Name:   " + name, 26, 70);
-              doc.text("Address:" + address, 26, 90);
-              doc.text("Phone:  " + phone, 26, 110);
-              doc.text("Gold:  " + self.state.last30Gold, 26, 130);
-              doc.text("Silver:  " + self.state.last30Silver, 26, 150);
-              doc.text("Number of Gold Dollar(credit):  " + self.state.last30Tjsc, 26, 170);
-              doc.text("Number of Gold Dollar(debit):  " + self.state.last30Tjsd, 26, 190);
-              doc.text("Card Number:  " + money.cards, 26, 210);
-              // doc.addImage(img, 'PNG', 20, 40, 43, 76);
-              let columns = ['TransactionID','From','To','Date','Remarks'];
-              let rows = preparePDFRow(result)
-              doc.autoTable(columns, rows, {
-                  startY: 240,
-                  margin: {
-                      horizontal: 10
-                  },
-                  styles: {
-                      overflow: 'linebreak',
-                      fontSize: 10,
-                      columnWidth: 'auto'
-                  },
-                  bodyStyles: {
-                      valign: 'top'
-                  },
-                  tableWidth: 'auto'
-              });
-              doc.save('transaction-' + new Date().getTime() + '.pdf');
-          };
-          setTimeout(()=>{
-            HTML2PDF()
-          },500);
+        // self.setState(
+        //   {
+        //     showHTMLTransaction: mode === "html" ? true : false,
+        //     userTransactions: result,
+        //     csvDisable: false
+        //   },
+        //   () => {
+        //     console.log("callback")
+        if (mode === "pdf") {
+          let doc = new jsPDF("p", "pt");
+          let name = profile.fullname;
+          let address =
+            profile.address +
+            ", " +
+            profile.city +
+            ", " +
+            profile.state +
+            ", " +
+            profile.zip;
+          let phone = Profile.findOne().phone;
+          let mem = "Gold";
+          doc.setFontSize(16);
+          doc.text("Texas Gold Card", 26, 50);
+          doc.setFontSize(14);
+          doc.text("Name:   " + name, 26, 70);
+          doc.text("Address:" + address, 26, 90);
+          doc.text("Phone:  " + phone, 26, 110);
+          doc.text("Gold:  " + self.state.last30Gold, 26, 130);
+          doc.text("Silver:  " + self.state.last30Silver, 26, 150);
+          doc.text(
+            "Number of Gold Dollar(credit):  " + self.state.last30Tjsc,
+            26,
+            170
+          );
+          doc.text(
+            "Number of Gold Dollar(debit):  " + self.state.last30Tjsd,
+            26,
+            190
+          );
+          doc.text(
+            "Card Number:  " + cardNumber,
+            26,
+            210
+          );
+          // doc.addImage(img, 'PNG', 20, 40, 43, 76);
+          let columns = ["TransactionID", "From", "To", "Date", "Remarks"];
+          let rows = preparePDFRow(result);
+          doc.autoTable(columns, rows, {
+            startY: 240,
+            margin: {
+              horizontal: 10
+            },
+            styles: {
+              overflow: "linebreak",
+              fontSize: 10,
+              columnWidth: "auto"
+            },
+            bodyStyles: {
+              valign: "top"
+            },
+            tableWidth: "auto"
+          });
+          doc.save("transaction-" + new Date().getTime() + ".pdf");
         }
-      })
-    });
-  }
+      }
+    );
+  };
+  // );
+
   handleLogin(e) {
     e.preventDefault();
     const email = this.state.email;
@@ -168,234 +249,285 @@ class Transaction extends React.Component {
     this.props.login({
       email,
       password
-    })
+    });
   }
   render() {
-    const {profile,money} = this.props;
-    if(!profile || !money) {
-      return <div>Loading...</div>
+    const { profile = {}, money = {} , transaction = [] } = this.props;
+    if (!profile || !money) {
+      return <div>Loading...</div>;
     }
-    const userTransactions = this.state.userTransactions || []
+    const userTransactions = this.state.userTransactions || [];
+    const styles = { paddingRight: "10px" };
     return (
-      <div className='container'>
-      <div className="panel panel-default">
-      	<div className="panel-heading">View Transactions</div>
-      	<div className="panel-body">
-      		<table className="table table-hover">
-            <tbody>
-            <tr>
-              <th>Full Name</th>
-              <td>{profile.fullname}</td>
-            </tr>
-      			<tr>
-              <th>Address</th>
-              <td>{profile.address} ,{profile.city} , {profile.state}, {profile.zip}</td>
-            </tr>
-      			<tr>
-              <th>Mobile No.</th>
-              <td>{profile.phone}</td>
-            </tr>
-      			<tr>
-              <th colSpan="2">
-                <br/>Transaction History Last 30 Days
-              </th>
-            </tr>
-      			<tr>
-              <th>Gold</th>
-              <td>{this.state.last30Gold} ounces</td>
-            </tr>
-      			<tr>
-              <th>Silver</th>
-              <td>{this.state.last30Silver} ounces</td>
-            </tr>
-      			<tr>
-              <th>Number of Gold Dollar(credit)</th>
-              <td>{this.state.last30Tjsc} Gold Dollar</td>
-            </tr>
-      			<tr>
-              <th>Number of Gold Dollar(debit)</th>
-              <td>{this.state.last30Tjsd} Gold Dollar</td>
-            </tr>
-      			<tr>
-              <th>Monthly Statement</th>
-                {
-                  profile.subscribe?
-                  (
-                    <td>
-                      Subscribed &nbsp;<button className="btn btn-primary" type="button" id="unsubscribe" onClick={()=>{
-                        this.props.emailUnsubscribe()
-                      }}>Click here to UnSubscribe</button>
-                    </td>
-                  )
-                  :
-                  (
-                    <td>
-                      Not Subscribe &nbsp;
-                      <button onClick={()=>{
-                        this.props.emailSubscribe();
-                      }} type="button" className="btn btn-primary">Click here to Subscribe</button>
-                    </td>
-                  )
-                }
-              </tr>
-      			<tr>
-              <td><br/><br/></td>
-              <td></td>
-            </tr>
-          </tbody>
-    		</table>
-        <div className="panel panel-primary">
-    			<div className="panel-heading">Select Account</div>
-    			<div className="panel-body">
-    				<table className="table selectAccount">
-    					<thead>
-    						<tr><td>Card Number</td><td>Type</td></tr>
-    					</thead>
-    					<tbody>
-    						<tr style={{backgroundColor:'#09DAA6'}}>
-                  <th>
-                    <input type="radio" name="accountSelection"
-                      defaultChecked className="accountSelection" value="gold" /> {money.cards}
-                  </th>
-                  <td>Gold Dollar</td>
-                </tr>
-    					</tbody>
-    				</table>
-    				<div className="panel panel-info">
-    					<div className="panel-heading">Select Date Range</div>
-    					<div className="panel-body">
-    						<div className="alert alert-danger error hidden">
-    						</div>
-    						<table className="table table-hover">
-    							<tbody>
-    								<tr>
-                      <td className="col-lg-6">Start Date</td>
-                      <td className="col-lg-6">
-                        <div className="form-group">
-                          <DatePicker
-                            value={this.state.startDate}
-                            onChange={(date)=>{
-                              this.setState({
-                                startDate: date
-                              })
-                            }}
-                            minDate={moment('2018','YYYY').toISOString()}
-                            maxDate={new Date().toISOString()}
-                            className='form-control'
-                          />
-  							        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="col-lg-6">End Date</td>
-                      <td className="col-lg-6">
-                        <div className="form-group">
-                          <DatePicker
-                            value={this.state.endDate}
-                            onChange={(date)=>{
-                              this.setState({
-                                endDate: date
-                              })
-                            }}
-                            minDate={moment('2018','YYYY').toISOString()}
-                            maxDate={new Date().toISOString()}
-                            className='form-control'
-                          />
-  							        </div>
-                      </td>
-                    </tr>
-    					</tbody>
-    				</table>
-    			</div>
-    		</div>
-    		<div className="row col-lg-12 actionButton">
-    			<div className="col-lg-4">
-    				<div onClick={this.getRequestedTransaction.bind(this, 'html')} disabled={!this.state.startDate || !this.state.endDate} className="btn btn-primary form-control asHTML">View as HTML</div>
-    			</div>
-    			<div className="col-lg-4">
-    				<div onClick={this.getRequestedTransaction.bind(this, 'pdf')} disabled={!this.state.startDate || !this.state.endDate} className="btn btn-primary form-control asPDF">Download as PDF</div>
-    			</div>
-    			<div disabled={!this.state.startDate || !this.state.endDate} className="col-lg-4">
-    				<div disabled={this.state.csvDisable} onClick={this.getRequestedTransaction.bind(this, 'csv')} className="btn btn-primary form-control asCSV">Download as CSV</div>
-    			</div>
-    		</div>
-    	</div>
-      </div>
-        <div className={`panel panel-primary ${this.state.showHTMLTransaction?'':'hidden'} details`}>
-          <div className="panel-heading">Transaction Details {moment(this.state.startDate).format('MM/DD/YYYY')} to {moment(this.state.endDate).format('MM/DD/YYYY')}</div>
-          <div className="panel-body ">
-            <table className="table table-striped forPDF">
-              <thead>
-                <tr>
-                  <td colSpan="3">Name</td>
-                  <td colSpan="2">{profile.fullname}</td>
-                </tr>
-                <tr>
-                  <td colSpan="3">Card Number</td>
-                  <td colSpan="2">{money.cards}</td>
-                </tr>
-                <tr className="warning">
-                  <th>From</th>
-                  <th>To</th>
-                  <th>TransactionID</th>
-                  <th>Date</th>
-                  <th>Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  userTransactions.map((transaction)=>{
-                    return (
-                      <tr key={transaction._id}>
-                        <td>{transaction.FromName}({transaction.FromCard}) sent {transaction.Fromgold} (Gold Dollar)</td>
-                        <td>{transaction.ToName}({transaction.ToCard}) received {transaction.Togold} (Gold Dollar) </td>
-                        <td><Link to={"/transaction/"+transaction._id}>{transaction._id}</Link></td>
-                        <td>{moment(transaction.Date).format('LLL')}</td>
-                        <td>{transaction.remarks}</td>
-                      </tr>
-                    )
-                  })
-                }
-                {
-                  userTransactions.length < 1?
-                  <tr><td colSpan="7" className="text-center">No Transaction Done</td></tr>
-                  :
-                  null
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
+      <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div
+          className="kt-content  kt-grid__item kt-grid__item--fluid"
+          id="kt_content"
+        >
+          <div className="row">
+            <div className="col-lg-2"></div>
+            <div className="col-lg-8 col-md-8 col-sm-12">
+              <div className="summary">
+                <div className="kt-portlet kt-portlet--height-fluid">
+                  <div className="kt-portlet__head">
+                    <div className="kt-portlet__head-label">
+                      <h3 className="kt-portlet__head-title">
+                        View Transactions
+                      </h3>
+                    </div>
+                    <div className="kt-portlet__head-toolbar">
+                      <a
+                        href="#"
+                        className="btn btn-label-brand btn-sm  btn-bold"
+                      >
+                        Subscribe to Monthly Statements
+                      </a>
+                    </div>
+                  </div>
+                  <div className="kt-portlet__body">
+                    <div className="kt-widget12">
+                      <div className="kt-widget12__content">
+                        <div className="kt-widget12__item">
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">Full Name</span>
+                            <span className="kt-widget12__value">
+                              {profile.fullname}
+                            </span>
+                          </div>
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">Address</span>
+                            <span className="kt-widget12__value">
+                              {profile.address} ,{profile.city} ,{" "}
+                              {profile.state}, {profile.zip}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="kt-widget12__item">
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Mobile No.
+                            </span>
+                            <span className="kt-widget12__value">
+                              {profile.phone}
+                            </span>
+                          </div>
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Monthly Statement
+                            </span>
+                            <span className="kt-widget12__value">
+                              {profile.subscribe
+                                ? "Subscribed"
+                                : "Not Subscribed"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="kt-widget12__item">
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Gold (Last 30 Days)
+                            </span>
+                            <span className="kt-widget12__value">
+                              {this.state.last30Gold}
+                            </span>
+                          </div>
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Silver (Last 30 Days)
+                            </span>
+                            <span className="kt-widget12__value">
+                              {this.state.last30Silver}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="kt-widget12__item">
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Number of Gold Dollar(credit - last 30 days)
+                            </span>
+                            <span className="kt-widget12__value">
+                              {this.state.last30Tjsc} Gold Dollar
+                            </span>
+                          </div>
+                          <div className="kt-widget12__info">
+                            <span className="kt-widget12__desc">
+                              Number of Gold Dollar(debit - last 30 days)
+                            </span>
+                            <span className="kt-widget12__value">
+                              {this.state.last30Tjsd} Gold Dollar
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="kt-portlet">
+                <div className="kt-portlet__head">
+                  <div className="kt-portlet__head-label">
+                    <h3 className="kt-portlet__head-title">
+                      Select Range to view history
+                    </h3>
+                  </div>
+                </div>
 
-    )
+                <form className="kt-form kt-form--label-right">
+                  <div className="kt-portlet__body">
+                    <div className="form-group row">
+                      <label className="col-3 col-form-label">
+                        Select Card
+                      </label>
+                      <div className="col-9">
+                        <div className="kt-radio-inline">
+                          <label className="kt-radio">
+                            <input type="radio" name="radio4" /> {money.cards}
+                            <span></span>
+                          </label>
+                        </div>
+                        <span className="form-text text-muted">Gold Card</span>
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label className="col-form-label col-lg-3 col-sm-12">
+                        Start - End Date
+                      </label>
+                      <div className="col-lg-4 col-md-9 col-sm-12">
+                        <div
+                          className="input-daterange input-group"
+                          id="kt_datepicker_5"
+                        >
+                          <input
+                            type="date"
+                            className="form-control"
+                            name="start"
+                            onChange={e =>
+                              this.setState({ startDate: e.target.value })
+                            }
+                          />
+                          <div className="input-group-append">
+                            <span className="input-group-text">
+                              <i className="la la-ellipsis-h"></i>
+                            </span>
+                          </div>
+                          <input
+                            type="date"
+                            className="form-control"
+                            name="end"
+                            onChange={e =>
+                              this.setState({ endDate: e.target.value })
+                            }
+                          />
+                        </div>
+                        <span className="form-text text-muted">
+                          Please select From and To range to view transactions
+                          in that time period.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="kt-portlet__foot">
+                    <div className="kt-form__actions">
+                      <div className="row">
+                        <div className="col-lg-9 ml-lg-auto">
+                          <button
+                            className="btn btn-brand"
+                            onClick={() => this.getRequestedTransaction("html")}
+                            disabled={
+                              !this.state.startDate || !this.state.endDate
+                            }
+                          >
+                            View as HTML
+                          </button>
+                          <div
+                            onClick={() => this.getRequestedTransaction("pdf")}
+                            disabled={
+                              !this.state.startDate || !this.state.endDate
+                            }
+                            className="btn btn-brand"
+                            className="btn btn-brand"
+                          >
+                            Download as PDF
+                          </div>
+                          <button
+                            disabled={this.state.csvDisable}
+                            onClick={() => this.getRequestedTransaction("csv")}
+                            className="btn btn-primary form-control asCSV"
+                            className="btn btn-brand"
+                          >
+                            Download as CSV
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              {!this.state.showHTMLTransaction && (
+                <div className="kt-portlet kt-portlet--mobile">
+                  <div className="kt-portlet__head kt-portlet__head--lg">
+                    <div className="kt-portlet__head-label">
+                      <span className="kt-portlet__head-icon">
+                        <i className="kt-font-brand flaticon2-line-chart"></i>
+                      </span>
+                      <h3 className="kt-portlet__head-title">Transactions</h3>
+                    </div>
+                    <div className="kt-portlet__head-toolbar">
+                      <div className="kt-portlet__head-wrapper">
+                        <div className="kt-portlet__head-actions">
+                          <a>
+                            From{" "}
+                            {moment(this.state.startDate).format("MM/DD/YYYY")}{" "}
+                            to {moment(this.state.endDate).format("MM/DD/YYYY")}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="kt-portlet__body kt-portlet__body--fit">
+                    {transaction && (
+                      <Reusabletable
+                        keyField="_id"
+                        data={transaction}
+                        columns={this.columns}
+                      ></Reusabletable>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          ><div className="col-lg-2"></div>
+        </div>
+      </div>
+    );
   }
 }
 
-const TransactionContainer = withTracker((props)=>{
+const TransactionContainer = withTracker( props => {
   return {
-    profile: Profile.findOne(),
-    money: Money.findOne(),
-    extraSpot: ExtraSpot.findOne(),
-    gold: Gold.findOne()
-  }
+    profile:  Profile.findOne(),
+    money:  Money.findOne(),
+    extraSpot:  ExtraSpot.findOne(),
+    gold:  Gold.findOne()
+  };
 })(Transaction);
-
 
 function mapStateToProps(state) {
   return {
     user: state.user,
     transaction: state.user.transactions || []
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    emailUnsubscribe: ()=> dispatch(emailUnsubscribe()),
-    emailSubscribe: ()=> dispatch(emailSubscribe())
-  }
+    emailUnsubscribe: () => dispatch(emailUnsubscribe()),
+    emailSubscribe: () => dispatch(emailSubscribe())
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionContainer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionContainer);

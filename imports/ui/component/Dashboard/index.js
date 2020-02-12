@@ -29,41 +29,23 @@ class Dashboard extends React.Component {
   }
   products = [];
   formatDate = (cell, row) => {
-    console.log("formatDatecell: ", cell);
-    return moment(cell).format("LLL");
-  };
-
-  formatFrom = (cell, row) => {
-    console.log("cell: ", cell);
-    return (
-      <span>{`${cell.FromName}(${cell.FromCard}) sent ${cell.Fromgold}`}</span>
-    );
-  };
-  formatTo = (cell, row) => {
-    console.log("cell: ", cell);
-    return (
-      <span>
-        {`${cell.ToName}(${cell.ToCard}) received ${cell.Togold}`}
-      </span>
-    );
+    return moment(cell).toString();
   };
   columns = [
     {
-      dataField: "data",
-      text: "From",
-      formatter: this.formatFrom
+      dataField: "FromName",
+      text: "From"
     },
     {
-      dataField: "data",
-      text: "To",
-      formatter: this.formatTo
+      dataField: "ToName",
+      text: "To"
     },
     {
-      dataField: "data._id",
+      dataField: "_id",
       text: "TransactionID"
     },
     {
-      dataField: "data.Date",
+      dataField: "Date",
       text: "Date",
       formatter: this.formatDate
     }
@@ -91,165 +73,8 @@ class Dashboard extends React.Component {
     });
   }
   render() {
-    const { money, profile, extraSpot, gold, user } = this.props;
-    const transaction = [
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "ROndsafRam",
-          Fromgold: "gold form",
-          ToName: "fdsaf",
-          ToCard: "dsafasd",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 132
-        }
-      },
+    const { money, profile, extraSpot, gold, user, transaction } = this.props;
 
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },
-      {
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      },{
-        data: {
-          FromName: "harsh",
-          FromCard: "RAJ",
-          Fromgold: "gold form",
-          ToName: "harsh",
-          ToCard: "dsafsda",
-          Togold: "gold form",
-          Date: "01-12-1998",
-          _id: 13233
-        }
-      }
-    ];
     let userGold = "";
     if (money) userGold = parseFloat(money.gold);
     const goldValue = gold ? parseFloat(gold.data) : "";
@@ -287,7 +112,7 @@ class Dashboard extends React.Component {
                     <div className="kt-portlet__head-wrapper">
                       <div className="kt-portlet__head-actions">
                         <Link
-                           to="/transaction"
+                          to="/transaction"
                           className="btn btn-brand btn-elevate btn-icon-sm"
                         >
                           <i className="la la-file-image-o"></i>

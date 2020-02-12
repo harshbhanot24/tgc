@@ -26,16 +26,22 @@ export default class AdminLayout extends React.Component {
     Meteor.subscribe('extraSpot')
   }
   render() {
+    const style= {
+    "clear": "both",
+    "position": "relative",
+    "height": "200px",
+    "margin-top": "-200px"
+}
     return (
       <div>
         <NotificationContainer />
         <Navbar />
         <Sidebar />
-        <main style={{paddingTop: '60px', marginLeft: '222px'}}>
+        <main>
           {this.props.children}
         </main>
-        <div style={{marginLeft:'182px'}}>
-          <Footer />
+        <div>
+          <Footer style={style}/>
         </div>
       </div>
     )

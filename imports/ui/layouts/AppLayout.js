@@ -22,15 +22,19 @@ export default class AppLayout extends React.Component {
     Meteor.subscribe('Silver')
   }
   render() {
+    const style = {
+      clear: "both",
+      position: "relative",
+      height: "200px",
+      "margin-top": "200px"
+    };
     return (
       <div>
         <NotificationContainer />
         <Navbar />
-        <main style={{marginTop:'60px'}}>
-          {this.props.children}
-        </main>
-        <Footer />
+        <main>{this.props.children}</main>
+        <Footer style={style} />
       </div>
-    )
+    );
   }
 }

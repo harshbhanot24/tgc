@@ -55,185 +55,176 @@ class Send extends React.Component {
     }
     const {step, error, errorMessage, successMessage} = transfer;
     return (
-      <div className="container">
-        <section className="sendPayment">
-          <legend>Transfer</legend>
-          <div className="panel panel-primary">
-            <div className="panel-heading">
-              <h3 className="panel-title">Transfer</h3>
-            </div>
-            <div className="panel-body col-lg-8">
-              {
-                error?
-                <div>
-                  <span className="alert alert-danger col-sm-12">{errorMessage}</span>
-                </div>
-                :
-                null
-              }
-              {
-                step === 1 ?
-                <form id="sendPayment" className="form-horizontal" role="form" method="post" onSubmit={this.handleSubmit.bind(this)}>
-                  <div className="form-group">
-                    <label htmlFor="yourcard" className="col-sm-4 control-label">Your Card Number</label>
-                    <div className="col-sm-8">
-                      <input type="text" disabled className="form-control" name="yourcard" required placeholder="Your Card Number" value={card}/>
+      <div
+        className="kt-content  kt-grid__item kt-grid__item--fluid"
+        id="kt_content"
+      >
+        <div className="row">
+          <div className="col-lg-2"></div>
+          <div className="col-lg-8 col-md-8 col-sm-12">
+            {error ? (
+              <div>
+                <span className="alert alert-danger col-sm-12">
+                  {errorMessage}
+                </span>
+              </div>
+            ) : null}
+            <div className="row">
+              <div className="col-lg-8 col-md-8 col-sm-12">
+                <div className="kt-portlet">
+                  <div className="kt-portlet__head">
+                    <div className="kt-portlet__head-label">
+                      <h3 className="kt-portlet__head-title">Transfer</h3>
                     </div>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="payeecard" className="col-sm-4 control-label">Reciever's Card Number</label>
-                    <div className="col-sm-8">
-                      <input type="text" maxLength="7" className="form-control" name="payeecard0" required value={this.state.receiverCard} onChange={(e)=>{
-                          let v = e.target.value;
-                          if(v && v.length > 2) {
-                            let ind = v.indexOf('-');
-                            if(ind === -1) {
-                              v = v.substr(0,2) +'-'+v.substr(2);
-                            }
-                          }
-                          this.setState({
-                            receiverCard: v
-                          })
-                        }} placeholder="NN-NNNN" />
-                    </div>
-                  </div>
-                  {
-                    /*
-                    <!--  <div className="form-group">
-                      <label htmlFor="amount" className="col-sm-4 control-label">Select Transfer Currency</label>
-                      <div className="col-sm-8">
-                        <select name="" id="currency" className="form-control">
-                          <option value="GoldDollar">Gold Dollars</option>
-                          <option value="GoldOunce">Gold Ounce</option>
-                          <option value="SilverOunce">Silver Ounce</option>
-                        </select>
-                      </div>
-                    </div> -->
-                    */
-                  }
-                  <div className="form-group">
-                    <label htmlFor="amount" className="col-sm-4 control-label">Amount Transfer(in GoldDollar)</label>
-                    <div className="col-sm-8">
-                      <input type="number" min="0" step="any" className="form-control" name="amount" value={this.state.amount} onChange={(e)=> this.setState({amount: e.target.value})} placeholder="Amount Transfer" />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="pinnumber" className="col-sm-4 control-label">Card Pin</label>
-                    <div className="col-sm-8">
-                      <input type="password" maxLength="4" className="form-control" name="pinnumber" required value={this.state.pin} onChange={(e)=> this.setState({pin:e.target.value})} placeholder="Pin Number"/>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="remarks" className="col-sm-4 control-label">Remarks</label>
-                    <div className="col-sm-8">
-                      <textarea className="form-control" name="remarks" required value={this.state.remarks} onChange={(e)=> this.setState({remarks:e.target.value})} placeholder="Detail about Transaction" rows="4"></textarea>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <div className="col-sm-offset-5 col-sm-2">
-                      <button className="btn btn-lg input-lg btn-primary" type="submit" disabled={transfer.inProgress}>Send Gold Dollar</button>
-                    </div>
-                  </div>
-                </form>
-                :
-                null
-              }
-              {
-                step === 2 ?
-                <form id="confirmForm" className="form-horizontal" role="form" method="post" onSubmit={this.handleSubmit.bind(this)}>
-                  <div className="form-group">
-                    <div className="col-sm-offset-1 col-sm-7">
-                      <h3>Are You Sure You Want to Proceed with Transfer</h3>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <div className="col-sm-offset-2 col-sm-2 sendbtn">
-                      <button className="btn btn-lg input-lg btn-success" type="submit" disabled={transfer.inProgress}>Confirm</button>
-                    </div>
-                    <div className="col-sm-2 sendbtn">
-                      <button className="btn btn-lg input-lg btn-danger" id="cancelTrans" type="button" onClick={()=>{
-                          this.props.resetTransaction();
-                        }}>Cancel</button>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="payeecard" className="col-sm-4 control-label">Reciever's Card Number</label>
-                    <div className="col-sm-8">
-                      <input type="text" min="0" maxLength="7" autoFocus="autoFocus" disabled="disabled" className="form-control disabled" name="payeecard" value={this.state.receiverCard} required placeholder="NN-NNNN"/>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="amount" className="col-sm-4 control-label">Amount Transfer(in Gold Dollar)</label>
-                    <div className="col-sm-8">
-                      <input type="text" disabled="disabled" min="0" step="any" className="form-control disabled" value={this.state.amount} name="amount" required placeholder="Amount Transfer"/>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="remarks" className="col-sm-4 control-label">Remarks</label>
-                    <div className="col-sm-8">
-                      <textarea disabled="disabled" className="form-control disabled" name="remarks" required placeholder="Detail about Transaction" rows="4" value={this.state.remarks}></textarea>
-                    </div>
-                  </div>
-                </form>
-                :
-                null
-              }
-              {
-                step === 3 ?
-                <div>
-                  <h3>Successfully Send</h3>
-                  <br/>Transaction's Details<br/>
-                  <table className='table table-responsive table-hover'><tr><td>Transaction ID:</td><td>{transfer.tId}</td></tr>
-                  <tr><td>Amount Transfered</td><td>{this.state.amount} GoldDollar </td></tr>
-                  <tr><td colSpan="2"><Link to='/' className='btn btn-hover btn-primary'>Continue</Link></td></tr></table>
-                </div>
-                :
-                null
-                /*
 
-                <div id="waitFor" style="display:none;">
-                  <h2 className="btn btn-warning btn-lg">Please Wait...</h2>
+                  <form className="kt-form">
+                    <div className="kt-portlet__body">
+                      <div className="form-group">
+                        <label>Your Card Number:</label>
+                        <p className="form-control-static">{card}</p>
+                      </div>
+                      <div className="form-group">
+                        <label>Reciever's Card Number</label>
+                        <div className="row">
+                          <div className="col-3">
+                            <input
+                              type="text"
+                              maxLength="7"
+                              className="form-control"
+                              name="payeecard0"
+                              required
+                              value={this.state.receiverCard}
+                              onChange={e => {
+                                let v = e.target.value;
+                                if (v && v.length > 2) {
+                                  let ind = v.indexOf("-");
+                                  if (ind === -1) {
+                                    v = v.substr(0, 2) + "-" + v.substr(2);
+                                  }
+                                }
+                                this.setState({
+                                  receiverCard: v
+                                });
+                              }}
+                              placeholder="NN-NNNN"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label for="name">Amount Transfer(in GoldDollar)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="any"
+                          className="form-control"
+                          name="amount"
+                          value={this.state.amount}
+                          onChange={e =>
+                            this.setState({ amount: e.target.value })
+                          }
+                          placeholder="Amount Transfer"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label for="pinnumber">Card Pin</label>
+                        <input
+                          type="password"
+                          maxLength="4"
+                          className="form-control"
+                          name="pinnumber"
+                          required
+                          value={this.state.pin}
+                          onChange={e => this.setState({ pin: e.target.value })}
+                          placeholder="Pin Number"
+                        />
+                      </div>
+                      <div className="form-group form-group-last">
+                        <label for="exampleTextarea">Remarks</label>
+                        <textarea
+                          className="form-control"
+                          name="remarks"
+                          required
+                          value={this.state.remarks}
+                          onChange={e =>
+                            this.setState({ remarks: e.target.value })
+                          }
+                          placeholder="Detail about Transaction"
+                          rows="4"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div className="kt-portlet__foot">
+                      <div className="kt-form__actions">
+                        <button type="reset" className="btn btn-primary">
+                          Send Gold Dollar
+                        </button>
+                        <button type="reset" className="btn btn-secondary">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-                */
-              }
-            </div>
-              <div className="panel-body col-lg-4">
-                <h4>Users from Recent Transfer</h4>
-                <table className="col-lg-12">
-                  <tbody>
-                    <tr>
-                      {
-                        recent.map((m, i)=>{
+              </div>
+              <div className="col-lg-4 col-md-4 col-sm-12">
+                <div className="kt-portlet kt-portlet--tabs kt-portlet--height-fluid">
+                  <div className="kt-portlet__head">
+                    <div className="kt-portlet__head-label">
+                      <h3 className="kt-portlet__head-title">
+                        Users from Recent Transfer
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="kt-portlet__body">
+                    <div className="tab-content">
+                      <div
+                        className="tab-pane active"
+                        id="kt_widget4_tab1_content"
+                      >
+                        <div className="kt-widget4">
+                          {recent.map((m, i) => {
                             return (
-                              <td key={i}>
-                                <div className="radio" onClick={(e)=>{
+                              <div className="kt-widget4__item">
+                                <div className="kt-widget4__info">
+                                  <a href="#" className="kt-widget4__username">
+                                    {m.name}
+                                  </a>
+                                  <p className="kt-widget4__text">{m.cardNo}</p>
+                                </div>
+                                <a
+                                  href="#"
+                                  onClick={e => {
                                     this.setState({
                                       receiverCard: m.cardNo
-                                    })
-                                  }}>
-                                  <label>
-                                    <input type="radio" name="" id="input" value="" checked="checked" />
-                                    ({m.cardNo}) {m.name}
-                                  </label>
-                                </div>
-                              </td>
-                            )
-                        })
-                      }
-                      {
-                        recent.length === 0?
-                        <td><h5>No Recent Transfer Found</h5></td>
-                        : null
-                      }
-                    </tr>
-                  </tbody>
-                </table>
+                                    });
+                                  }}
+                                  className="btn btn-sm btn-label-primary btn-bold"
+                                >
+                                  Select
+                                </a>
+                              </div>
+                            );
+                          })}
+                          {recent.length === 0 ? (
+                           
+                              <h5>No Recent Transfer Found</h5>
+                            
+                          ) : null}
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
           </div>
-        </section>
-
+        </div>
+        <div className="col-lg-2"></div>
       </div>
-    )
+    );
   }
 }
 
