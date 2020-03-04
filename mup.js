@@ -2,39 +2,40 @@ module.exports = {
   servers: {
     one: {
       // TODO: set host address, username, and authentication method
-      host: 'ec2-18-191-134-52.us-east-2.compute.amazonaws.com',
-      username: 'ubuntu',
-      pem: './texasgold.pem'
-      // password: 'server-password'
+      host: "192.241.152.237",
+      username: "root",
+      // pem: "./texasgold.pem"
+      password: "advanta!1234"
       // or neither for authenticate from ssh-agent
     }
   },
 
   app: {
     // TODO: change app name and path
-    name: 'texasgold',
-    path: '.',
+    name: "texasgold",
+    path: ".",
 
     servers: {
-      one: {},
+      one: {}
     },
 
     buildOptions: {
-      serverOnly: true,
+      serverOnly: true
     },
 
     env: {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
       PORT: 2010,
-      ROOT_URL: 'http://18.191.134.52:2010',
-      MONGO_URL: 'mongodb://mongodb/meteor',
-      MONGO_OPLOG_URL: 'mongodb://mongodb/local',
+      ROOT_URL: "http://192.241.152.237",
+      MONGO_URL: "mongodb://mongodb/meteor",
+      MONGO_OPLOG_URL: "mongodb://mongodb/local"
     },
 
     docker: {
       // change to 'abernix/meteord:base' if your app is using Meteor 1.4 - 1.5
-      image: 'abernix/meteord:node-8.4.0-base',
+      image: "abernix/meteord:node-12.14.0-base",
+      prepareBundle: false
     },
 
     // Show progress bar while uploading bundle to server
@@ -43,11 +44,11 @@ module.exports = {
   },
 
   mongo: {
-    version: '3.4.1',
+    version: "3.4.1",
     servers: {
       one: {}
     }
-  },
+  }
 
   // (Optional)
   // Use the proxy to setup ssl or to route requests to the correct
