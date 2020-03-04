@@ -197,7 +197,7 @@ Meteor.methods({
     }
     return false;
   },
-  transferMoney: function(payeeCard, Amount, pinNumber, remarks, goldValue) {
+  transferMoney: function(payeeCard, Amount, pinNumber, remarks, goldValue, id) {
     // mem = Profile.findOne({
     // userId: Meteor.userId()
     // }).membership[0].toLowerCase();
@@ -211,11 +211,13 @@ Meteor.methods({
       cards: payeeCard
     }).userId;
     //details of current user
+    let sender_id = Meteor.userId() ? Meteor.userId() : id;
+    console.log("userId: ", sender_id);
     let currentUser = MoneyO.findOne({
-      userId: Meteor.userId()
+      userId:sender_id
     });
-    if (PayeeUserId == Meteor.userId()) {
-      throw new Meteor.Error(504, 'Cannot Send GoldDollar to yourself');
+    if (PayeeUserId == sender_id) {
+      throw new Meteor.Error(504, "Cannot Send GoldDollar to yourself");
     }
     //details of payee user
     let PayeeUser = MoneyO.findOne({
@@ -265,15 +267,18 @@ Meteor.methods({
       //update senders tj and total send tj
       let decreaseGold = parseFloat(currentUser.gold - goldOunce)
       let increaseGold = parseFloat(PayeeUser.gold + goldOunce);
-      MoneyO.update({
-        userId: Meteor.userId()
-      }, {
-        $set: {
-          tj: newtj,
-          tjsend: newtjsend,
-          gold: decreaseGold
+      MoneyO.update(
+        {
+          userId: sender_id
+        },
+        {
+          $set: {
+            tj: newtj,
+            tjsend: newtjsend,
+            gold: decreaseGold
+          }
         }
-      });
+      );
       //update payee tj and total recieved tj
       MoneyO.update({
         userId: PayeeUserId
@@ -286,16 +291,16 @@ Meteor.methods({
       });
       //transaction update transaction details {from , to , tjtransfer, date}
       let tid = Transaction.insert({
-        From: Meteor.userId(),
+        From: sender_id,
         To: PayeeUserId,
-        TJTransfer: (parseFloat(Amount * multiplier) - forAdmin),
+        TJTransfer: parseFloat(Amount * multiplier) - forAdmin,
         Date: new Date(),
         createdAt: new Date(),
-        remarks: remarks,
+        remarks: remarks
       });
       //add recent transfer
       let recent = RecentTransferUser.findOne({
-        userId: Meteor.userId()
+        userId: sender_id
       });
       let obj = {
         cardNo: payeeCard,
@@ -306,7 +311,7 @@ Meteor.methods({
       };
       if (recent == undefined) {
         RecentTransferUser.insert({
-          userId: Meteor.userId(),
+          userId: sender_id,
           recent: [obj]
         });
       } else {
@@ -325,13 +330,16 @@ Meteor.methods({
         });
       }
       //sender blockchain updated
-      getAllBlock = BlockChain.find({
-        userId: Meteor.userId()
-      }, {
-        sort: {
-          createdAt: 1
+      getAllBlock = BlockChain.find(
+        {
+          userId: sender_id
+        },
+        {
+          sort: {
+            createdAt: 1
+          }
         }
-      }).fetch();
+      ).fetch();
       for (i = parseFloat(Amount), j = 0; parseFloat(i) > 0, j < getAllBlock.length; j++) {
         //get first tj from blokchain belong to userId
         stj = parseFloat(getAllBlock[j].tj);
@@ -372,17 +380,36 @@ Meteor.methods({
       let newBalance = parseFloat(Money.findOne({
         userId: PayeeUserId
       }).gold) * nowGold * multiplier;
-      let newMyBalance = parseFloat(Money.findOne({
-        userId: Meteor.userId()
-      }).gold) * nowGold * multiplier;
+      let newMyBalance =
+        parseFloat(
+          Money.findOne({
+            userId: sender_id
+          }).gold
+        ) *
+        nowGold *
+        multiplier;
       //send reciver a update email
-      text = "Hello,\nYou Recieve PAYMENT of GoldDollar " + (parseFloat(Amount * multiplier)).toFixed(2) + " From " + Profile.findOne({
-        userId: Meteor.userId()
-      }).fullname + "(" + Profile.findOne({
-        userId: Meteor.userId()
-      }).email + ")" + "\nTransaction Number : " + tid + "\nSender's Remarks: " + Transaction.findOne({
-        _id: tid
-      }).remarks + "\n\nYour New GoldDollar Balance is: \n" + UTILS.currencyFormat((parseFloat(newBalance)).toFixed(2)) + "\n\nFor More Info Login To Your Account\n\nYour Gold Dollar balance tends to change with spot price.";
+      text =
+        "Hello,\nYou Recieve PAYMENT of GoldDollar " +
+        parseFloat(Amount * multiplier).toFixed(2) +
+        " From " +
+        Profile.findOne({
+          userId: sender_id
+        }).fullname +
+        "(" +
+        Profile.findOne({
+          userId: sender_id
+        }).email +
+        ")" +
+        "\nTransaction Number : " +
+        tid +
+        "\nSender's Remarks: " +
+        Transaction.findOne({
+          _id: tid
+        }).remarks +
+        "\n\nYour New GoldDollar Balance is: \n" +
+        UTILS.currencyFormat(parseFloat(newBalance).toFixed(2)) +
+        "\n\nFor More Info Login To Your Account\n\nYour Gold Dollar balance tends to change with spot price.";
       if (isPayeeMerchant == true) {
         text += "\n\n**You have Merchant Account, So Merchant Fees will be Applied On Recieved Amount";
       }
@@ -408,7 +435,7 @@ Meteor.methods({
         }).email + ")" + "\nTransaction Number : " + tid + "\nYour New GoldDollar Balance is: \n" + numberWithCommas((parseFloat(newMyBalance)).toFixed(2)) + "\n\nFor More Info Login To Your Account\n\nYour Gold Dollar balance tends to change with spot price.";
         html = Meteor.call('generateEmail', text.replace(/\n/g, "<br />"));
         email = Profile.findOne({
-          userId: Meteor.userId()
+          userId: sender_id
         }).email;
         Meteor.call("sendEmail", "Texas Gold Card: SEND PAYMENT INFO", html, email);
         // Email.send({

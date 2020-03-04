@@ -253,7 +253,7 @@ Meteor.startup(function() {
     //                 break;
     //             }
     //         }
-    console.log(card);
+    
   } else {
     Meteor.users.update(
       {
@@ -639,3 +639,60 @@ Meteor.startup(function() {
     }
   }, 86400000);
 });
+
+if (Meteor.isServer) {
+  // Global API configuration
+  var Api = new Restivus({
+    useDefaultAuth: true,
+    prettyJson: true
+  });
+ Api.addRoute(
+   "user",
+   { authRequired: true },
+   {
+     get: function() {
+      const {username , emails} = this.user;
+      const profile = Profile.findOne({userId: this.userId});
+      const balance = Money.findOne({ userId: this.userId });
+       return { username, emails,pin, ...profile, ...balance };
+       
+     }
+   }
+ );
+ Api.addRoute(
+   "transfer",
+   { authRequired: true },
+   {
+     post: function(){
+       const {
+         receiverCard,
+         amount,
+         pin,
+         remarks,
+         userId
+       } = this.bodyParams;
+       
+       let res; 
+       try{
+       const tranId =  Meteor.call(
+         "transferMoney",
+         receiverCard,
+         amount, // the amount here is TGC
+         pin,
+         remarks,
+         1, // to get tgc 
+        userId
+       );
+       res = {"message":"your transaction is sucessful", tranId}
+       }
+       catch(err){
+         res = err;
+       }
+           return res;  
+     }
+ 
+    }
+
+ );
+  
+  }

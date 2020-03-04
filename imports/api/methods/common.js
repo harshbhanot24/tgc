@@ -58,10 +58,8 @@ Meteor.methods({
       }
     }, function(err, res) {
       if (err) {
-        console.log(err);
         return false;
       } else {
-        console.log('b');
         return true;
       }
     });
