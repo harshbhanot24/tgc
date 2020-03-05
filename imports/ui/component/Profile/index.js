@@ -198,6 +198,7 @@ class ProfilePage extends React.Component {
                 <h3 className="kt-portlet__head-title">Edit Your Profile</h3>
               </div>
             </div>
+
             <div className="kt-portlet__body">
               <form
                 id="editprofile"
@@ -227,7 +228,7 @@ class ProfilePage extends React.Component {
                 {profile.merchant ? (
                   <div className="form-group col-lg-12">
                     <h2> You have a Merchant Account </h2>
-                    <br />
+                 
                     <div className="col-lg-4">
                       <h3>Merchant Fees:</h3>
                     </div>
@@ -478,570 +479,29 @@ class ProfilePage extends React.Component {
                 <div className="kt-portlet__foot">
                   <div className="kt-form__actions">
                     <button type="submit" className="btn btn-primary">
-                      Save
+                      Update Profile
                     </button>
-                  </div>
-                </div>
-              </form>
-              <legend>Recovery Options</legend>
-              <form
-                id="editSecurityQuestion"
-                className="form-horizontal"
-                role="form"
-                onSubmit={this.handleSubmitQuestion.bind(this)}
-              >
-                {Qerror ? (
-                  <div>
-                    <span className="alert alert-danger col-sm-12">
-                      {QerrorMessage}
-                    </span>
-                  </div>
-                ) : null}
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="passwd" className="control-label">
-                      Your Account Password
-                    </label>
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      name="passwd"
-                      id="passwd"
-                      placeholder="Password"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="question1">Security Questions 1 </label>
-                  </div>
-                  <div className="col-lg-6">
-                    <select
-                      name="question1"
-                      id="question1"
-                      data-id="1"
-                      className="questions q1 form-control"
-                      required="required"
-                    >
-                      {ques1.map(q => {
-                        return (
-                          <option value={q.id} key={q.id}>
-                            {q.question}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="answer1">Security Answer 1 </label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      id="answer1"
-                      name="answer1"
-                      placeholder="Your Answer"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="question2">Security Questions 2 </label>
-                  </div>
-                  <div className="col-lg-6">
-                    <select
-                      name="question2"
-                      id="question2"
-                      className="questions q2 form-control"
-                      required="required"
-                    >
-                      {ques2.map(q => {
-                        return (
-                          <option value={q.id} key={q.id}>
-                            {q.question}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="answer">Security Answer 2 </label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      id="answer2"
-                      name="answer2"
-                      placeholder="Your Answer"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-offset-2 col-lg-6">
-                    <button
-                      type="submit"
-                      href="#confirmPassword"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
-                      Update Security Details
+                    <button type="reset" className="btn btn-secondary">
+                      Reset
                     </button>
                   </div>
                 </div>
               </form>
 
-              <legend>Change Pin</legend>
-              <form
-                onSubmit={this.handleSubmitPinChange.bind(this)}
-                id="resetPinform"
-                className="form-horizontal"
-                role="form"
-                method="post"
-              >
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="password" className="control-label">
-                      Your Account Password
-                    </label>
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      name="passwd"
-                      id="password"
-                      placeholder="Password"
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="cpassword" className="col-md-2 control-label">
-                    New Pin
-                  </label>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      name="pin"
-                      placeholder="NEW PIN"
-                      maxLength="4"
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="cpassword" className="col-md-2 control-label">
-                    Confirm New Pin
-                  </label>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      required
-                      className="form-control"
-                      name="cpin"
-                      placeholder="Confirm Pin"
-                      maxLength="4"
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <div className="col-md-offset-2 col-md-6">
-                    <button
-                      type="submit"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
-                      Change Pin
-                    </button>
-                  </div>
-                </div>
-              </form>
-
-              <legend>Change Password</legend>
-
-              <form
-                onSubmit={this.handleSubmitPassword.bind(this)}
-                id="editchangepassword"
-                className="form-horizontal"
-                method="POST"
-                role="form"
-              >
-                {Perror ? (
-                  <div>
-                    <span className="alert alert-danger col-sm-12">
-                      {PerrorMessage}
-                    </span>
-                  </div>
-                ) : null}
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="oldpass">Old Password</label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input
-                      type="password"
-                      required
-                      maxLength="15"
-                      className="form-control"
-                      id="oldpass"
-                      name="oldpass"
-                      placeholder="Old Password"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="newpass">New Password</label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input
-                      type="password"
-                      required
-                      maxLength="15"
-                      className="form-control"
-                      id="newpass"
-                      name="newpass"
-                      placeholder="New Password"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="cnewpass">Confirm New Password</label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input
-                      type="password"
-                      required
-                      maxLength="15"
-                      className="form-control"
-                      id="cnewpass"
-                      name="cnewpass"
-                      placeholder="Confirm New Password"
-                    />
-                  </div>
-                </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-offset-2 col-lg-6">
-                    <button
-                      type="submit"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
-                      Change Password
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <br />
+              
             </div>
           </div>
           <div className="col-lg-2"></div>
         </div>
-      </div>
-      <div className="row">
+        <div className="row">
           <div className="col-lg-2"></div>
           <div className="col-lg-8 col-md-8 col-sm-12 kt-portlet">
             <div className="kt-portlet__head">
               <div className="kt-portlet__head-label">
-                <h3 className="kt-portlet__head-title">Edit Your Profile</h3>
+                <h3 className="kt-portlet__head-title">Recovery Options</h3>
               </div>
             </div>
             <div className="kt-portlet__body">
-              <form
-                id="editprofile"
-                className="kt-form kt-form--label-right"
-                method="POST"
-                role="form"
-                onSubmit={this.handleSubmitProfile.bind(this)}
-              >
-                <div className="alert-text">
-                  {error ? (
-                    <div>
-                      <span className="alert alert-danger col-sm-12">
-                        {errorMessage}
-                      </span>
-                    </div>
-                  ) : null}
-                  {!profile.fullname ? (
-                    <div className="alert alert-warning">
-                      <p>
-                        Please Fill your Profile Details Before Using Texas Gold
-                        Card
-                      </p>
-                    </div>
-                  ) : null}
-                </div>
-
-                {profile.merchant ? (
-                  <div className="form-group col-lg-12">
-                    <h2> You have a Merchant Account </h2>
-                    <br />
-                    <div className="col-lg-4">
-                      <h3>Merchant Fees:</h3>
-                    </div>
-                    <div className="col-lg-8">
-                      <h4>{profile.merchantFee} %</h4>
-                    </div>
-                  </div>
-                ) : null}
-                <div className="form-group row">
-                  <label
-                    for="example-text-input"
-                    className="col-2 col-form-label"
-                  >
-                    Profile Picture
-                  </label>
-                  <div className="col-10">
-                    <img
-                      src={
-                        this.state.customImg
-                          ? this.state.customImg
-                          : profile.img
-                      }
-                      className="img-responsive img-rounded"
-                      style={{ maxWidth: "250px", maxHeight: "250px" }}
-                    />
-                    <input
-                      id="photo"
-                      onChange={e => {
-                        const self = this;
-                        let file = e.target.files[0];
-                        if (file) {
-                          let reader = new FileReader();
-                          reader.readAsDataURL(file);
-                          reader.onload = function() {
-                            self.setState({
-                              customImg: reader.result,
-                              showImgSave: true
-                            });
-                          };
-                        }
-                      }}
-                      accept="image/*"
-                      type="file"
-                    />
-                    {this.state.showImgSave ? (
-                      <div
-                        style={{
-                          paddingTop: "20px",
-                          paddingLeft: "20px",
-                          clear: "both"
-                        }}
-                      >
-                        <button
-                          onClick={() =>
-                            this.setState({ customImg: "", showImgSave: false })
-                          }
-                          className="btn btn-info"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={() => {
-                            const self = this;
-                            self.setState({
-                              imgUploading: true
-                            });
-                            let newImg = this.state.customImg; //base64
-                            Meteor.call("uploadUserImg", newImg, (err, res) => {
-                              self.setState({
-                                showImgSave: false,
-                                imgUploading: false
-                              });
-                            });
-                          }}
-                          disabled={this.state.imgUploading}
-                          className="btn btn-success"
-                        >
-                          Save Profile Photo
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-search-input"
-                    className="col-2 col-form-label"
-                  >
-                    Full Name*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      required
-                      type="text"
-                      autoFocus
-                      className="form-control"
-                      id="fullname"
-                      name="fullname"
-                      placeholder="Full Name"
-                      defaultValue={profile.fullname}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-email-input"
-                    className="col-2 col-form-label"
-                  >
-                    Date of Birth*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      required
-                      type="date"
-                      className="form-control"
-                      id="dob"
-                      name="dob"
-                      placeholder="Date Of Birth"
-                      min="1900-01-01"
-                      max={moment()
-                        .subtract(13, "years")
-                        .format("YYYY-MM-DD")}
-                      defaultValue={profile.dob}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-url-input"
-                    className="col-2 col-form-label"
-                  >
-                    Email*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      required
-                      type="email"
-                      disabled
-                      autoFocus
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      placeholder="Email"
-                      defaultValue={profile.email}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-tel-input"
-                    className="col-2 col-form-label"
-                  >
-                    Address*
-                  </label>
-                  <div className="col-10">
-                    <textarea
-                      required
-                      className="form-control"
-                      rows="4"
-                      id="address"
-                      name="address"
-                      placeholder="Your Address"
-                      defaultValue={profile.address}
-                    ></textarea>
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-password-input"
-                    className="col-2 col-form-label"
-                  >
-                    City
-                  </label>
-                  <div className="col-10">
-                    <input
-                      type="text"
-                      required
-                      className="form-control"
-                      rows="4"
-                      id="city"
-                      name="city"
-                      placeholder="City"
-                      defaultValue={profile.city}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-datetime-local-input"
-                    className="col-2 col-form-label"
-                  >
-                    State*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      type="text"
-                      required
-                      className="form-control"
-                      rows="4"
-                      id="state"
-                      name="state"
-                      placeholder="State"
-                      defaultValue={profile.state}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-month-input"
-                    className="col-2 col-form-label"
-                  >
-                    ZipCode*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      type="text"
-                      maxLength="6"
-                      required
-                      className="form-control"
-                      id="zip"
-                      name="zip"
-                      placeholder="Zip Code"
-                      defaultValue={profile.zip}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label
-                    for="example-week-input"
-                    className="col-2 col-form-label"
-                  >
-                    Phone No.*
-                  </label>
-                  <div className="col-10">
-                    <input
-                      type="text"
-                      required
-                      maxLength="15"
-                      className="form-control"
-                      id="phone"
-                      name="phone"
-                      placeholder="Phone No"
-                      defaultValue={profile.phone}
-                    />
-                  </div>
-                </div>
-
-                <div className="kt-portlet__foot">
-                  <div className="kt-form__actions">
-                    <button type="submit" className="btn btn-primary">
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <legend>Recovery Options</legend>
               <form
                 id="editSecurityQuestion"
                 className="form-horizontal"
@@ -1055,13 +515,16 @@ class ProfilePage extends React.Component {
                     </span>
                   </div>
                 ) : null}
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="passwd" className="control-label">
-                      Your Account Password
-                    </label>
-                  </div>
-                  <div className="col-md-6">
+
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Your Account Password
+                  </label>
+
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1072,11 +535,15 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="question1">Security Questions 1 </label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Security Questions 1{" "}
+                  </label>
+
+                  <div className="col-10">
                     <select
                       name="question1"
                       id="question1"
@@ -1094,11 +561,15 @@ class ProfilePage extends React.Component {
                     </select>
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="answer1">Security Answer 1 </label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Security Answer 1{" "}
+                  </label>
+
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1109,11 +580,14 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="question2">Security Questions 2 </label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Security Questions 2{" "}
+                  </label>
+                  <div className="col-10">
                     <select
                       name="question2"
                       id="question2"
@@ -1130,11 +604,14 @@ class ProfilePage extends React.Component {
                     </select>
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="answer">Security Answer 2 </label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Security Answer 2{" "}
+                  </label>
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1145,20 +622,31 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-offset-2 col-lg-6">
-                    <button
-                      type="submit"
-                      href="#confirmPassword"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
+
+                <div className="kt-portlet__foot">
+                  <div className="kt-form__actions">
+                    <button type="submit" className="btn btn-primary">
                       Update Security Details
+                    </button>
+                    <button type="reset" className="btn btn-secondary">
+                      Reset
                     </button>
                   </div>
                 </div>
               </form>
-
-              <legend>Change Pin</legend>
+            </div>
+          </div>
+          <div className="col-lg-2"></div>
+        </div>
+        <div className="row">
+          <div className="col-lg-2"></div>
+          <div className="col-lg-8 col-md-8 col-sm-12 kt-portlet">
+            <div className="kt-portlet__head">
+              <div className="kt-portlet__head-label">
+                <h3 className="kt-portlet__head-title">Change Pin</h3>
+              </div>
+            </div>
+            <div className="kt-portlet__body">
               <form
                 onSubmit={this.handleSubmitPinChange.bind(this)}
                 id="resetPinform"
@@ -1166,13 +654,14 @@ class ProfilePage extends React.Component {
                 role="form"
                 method="post"
               >
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="password" className="control-label">
-                      Your Account Password
-                    </label>
-                  </div>
-                  <div className="col-md-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Your Account Password
+                  </label>
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1183,11 +672,14 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="cpassword" className="col-md-2 control-label">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
                     New Pin
                   </label>
-                  <div className="col-md-6">
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1198,11 +690,14 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="cpassword" className="col-md-2 control-label">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
                     Confirm New Pin
                   </label>
-                  <div className="col-md-6">
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1213,20 +708,32 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <div className="col-md-offset-2 col-md-6">
-                    <button
-                      type="submit"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
+
+                <div className="kt-portlet__foot">
+                  <div className="kt-form__actions">
+                    <button type="submit" className="btn btn-primary">
                       Change Pin
+                    </button>
+                    <button type="reset" className="btn btn-secondary">
+                      Reset
                     </button>
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+          <div className="col-lg-2"></div>
+        </div>
+        <div className="row">
+          <div className="col-lg-2"></div>
+          <div className="col-lg-8 col-md-8 col-sm-12 kt-portlet">
+            <div className="kt-portlet__head">
+              <div className="kt-portlet__head-label">
+                <h3 className="kt-portlet__head-title">Change Password</h3>
+              </div>
+            </div>
 
-              <legend>Change Password</legend>
-
+            <div className="kt-portlet__body">
               <form
                 onSubmit={this.handleSubmitPassword.bind(this)}
                 id="editchangepassword"
@@ -1241,11 +748,14 @@ class ProfilePage extends React.Component {
                     </span>
                   </div>
                 ) : null}
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="oldpass">Old Password</label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Old Password
+                  </label>
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1257,11 +767,14 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="newpass">New Password</label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    New Password
+                  </label>
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1273,11 +786,15 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-2">
-                    <label htmlFor="cnewpass">Confirm New Password</label>
-                  </div>
-                  <div className="col-lg-6">
+                <div className="form-group row">
+                  <label
+                    for="example-search-input"
+                    className="col-2 col-form-label"
+                  >
+                    Confirm New Password
+                  </label>
+
+                  <div className="col-10">
                     <input
                       type="password"
                       required
@@ -1289,18 +806,17 @@ class ProfilePage extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="form-group col-lg-12">
-                  <div className="col-lg-offset-2 col-lg-6">
-                    <button
-                      type="submit"
-                      className="btn input-lg btn-primary btn-lg form-control"
-                    >
+                <div className="kt-portlet__foot">
+                  <div className="kt-form__actions">
+                    <button type="submit" className="btn btn-primary">
                       Change Password
+                    </button>
+                    <button type="reset" className="btn btn-secondary">
+                      Reset
                     </button>
                   </div>
                 </div>
               </form>
-              <br />
             </div>
           </div>
           <div className="col-lg-2"></div>
