@@ -40,6 +40,7 @@ export function sendAmount(data, step = 1) {
       step: 1
     })
     if (money && extraSpot && !isNaN(parseFloat(goldValue))) {
+      debugger;
       userGold = parseFloat(money.gold);
       multiplier = extraSpot.multiplier;
     } else {
