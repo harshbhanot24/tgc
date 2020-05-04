@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
           className="kt-content  kt-grid__item kt-grid__item--fluid"
           id="kt_content"
         >
-          <div className="row">
+          <div className="row" style={{ marginBottom: 200 }}>
             <div className="col-lg-2"></div>
             <div className="col-lg-8 col-md-8 col-sm-12">
               <GoldData

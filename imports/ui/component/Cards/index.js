@@ -4,10 +4,11 @@ import {Link} from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Profile } from '../../../collections/Profile';
 import { Money } from '../../../collections/Money';
-
+import { ExtraSpot } from "../../../collections/ExtraSpot";
 import './style.scss';
 import GoldData from '../goldData';
-
+import { Gold } from "../../../collections/Gold";
+import UTILS from "../../../util";
 class Cards extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,7 @@ class Cards extends React.Component {
 
   }
   render() {
-    const {money,profile,gold,user} = this.props;
+    const { money, profile, gold, user, extraSpot } = this.props;
     let fullname = '';
     let cards = '';
     if(profile)
@@ -147,10 +148,17 @@ class Cards extends React.Component {
 
 
 const CardsContainer = withTracker((props)=>{
+  Meteor.subscribe("Gold");
+  Meteor.subscribe("Silver");
+  Meteor.subscribe("Multiplier");
+  Meteor.subscribe("profile");
+  Meteor.subscribe("balance");
   return {
     profile: Profile.findOne(),
     money: Money.findOne(),
-  }
+    extraSpot: ExtraSpot.findOne(),
+    gold: Gold.findOne()
+  };
 })(Cards);
 
 function mapStateToProps(state) {

@@ -405,6 +405,11 @@ class Send extends React.Component {
 
 
 const SendContainer = withTracker((props)=>{
+   Meteor.subscribe("Gold");
+   Meteor.subscribe("Silver");
+   Meteor.subscribe("RecentTransferUser");
+ 
+   Meteor.subscribe("Money");
   return {
     money: Money.findOne(),
     gold: Gold.findOne(),

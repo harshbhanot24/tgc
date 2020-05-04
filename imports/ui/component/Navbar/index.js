@@ -156,11 +156,23 @@ class Navbar extends React.Component {
                         aria-haspopup="true"
                       >
                         <Link to="/send" className="kt-menu__link ">
-                          <span className="kt-menu__link-text">
-                            Transfer
-                          </span>
+                          <span className="kt-menu__link-text">Transfer</span>
                           <i className="kt-menu__hor-arrow la la-exchange"></i>
                         </Link>
+                      </li>
+                      <li
+                        className={this.isActive("/send")}
+                        aria-haspopup="true"
+                      >
+                        <a
+                          href="http://192.241.152.237:8000"
+                          className="kt-menu__link "
+                        >
+                          <span className="kt-menu__link-text">
+                            Market Place
+                          </span>
+                          <i className="kt-menu__hor-arrow la la-exchange"></i>
+                        </a>
                       </li>
                       <li className="kt-menu__item" aria-haspopup="true">
                         <a style={style.border} className="kt-menu__link ">
