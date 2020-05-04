@@ -27,23 +27,18 @@ export default class AdminLayout extends React.Component {
   }
   render() {
     const style= {
-    "clear": "both",
-    "position": "relative",
-    "height": "200px",
-    "margin-top": "-200px"
+    "margin-top": "100px"
 }
     return (
-      <div>
+      <>
         <NotificationContainer />
         <Navbar />
         <Sidebar />
-        <main>
-          {this.props.children}
-        </main>
+        <main style={style}>{this.props.children}</main>
         <div>
-          <Footer style={style}/>
+          <Footer />
         </div>
-      </div>
-    )
+      </>
+    );
   }
 }

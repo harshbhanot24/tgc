@@ -654,11 +654,13 @@ if (Meteor.isServer) {
       const {username , emails} = this.user;
       const profile = Profile.findOne({userId: this.userId});
       const balance = Money.findOne({ userId: this.userId });
-       return { username, emails,pin, ...profile, ...balance };
+       return { username, emails, ...profile, ...balance };
        
      }
    }
  );
+ 
+ 
  Api.addRoute(
    "transfer",
    { authRequired: true },
@@ -686,7 +688,7 @@ if (Meteor.isServer) {
        res = {"message":"your transaction is sucessful", tranId}
        }
        catch(err){
-         res = err;
+         res = "Something bad happened please check your params and try again";
        }
            return res;  
      }

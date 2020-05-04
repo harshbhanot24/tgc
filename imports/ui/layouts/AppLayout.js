@@ -23,18 +23,16 @@ export default class AppLayout extends React.Component {
   }
   render() {
     const style = {
-      clear: "both",
-      position: "relative",
-      height: "200px",
-      "margin-top": "200px"
+   
+      "margin-top": "100px"
     };
     return (
-      <div>
+      <>
         <NotificationContainer />
         <Navbar />
-        <main>{this.props.children}</main>
-        <Footer style={style} />
-      </div>
+        <main style={style}>{this.props.children}</main>
+        <Footer />
+      </>
     );
   }
 }

@@ -1,5 +1,20 @@
 {
+  "data": "hy",
+  "private": {
+    "MAIL_URL": "smtp://SMTP_Injection:0b786e8ac22efa0bc3464f7613d1cf0581b2299c@smtp.sparkpostmail.com:587/",
+    "houseTjEmail": "housetjgold@gmail.com",
+    "smtpkey": "0b786e8ac22efa0bc3464f7613d1cf0581b2299c",
+    "s3": {
+      "AccessKey": "AKIAI2SUA7HJ7DJ6OQEA",
+      "SecretKey": "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",
+      "region": "us-east-2",
+      "bucket": "texasgold"
+    }
+  },
   "public": {
-
+    "staleSessionInactivityTimeout": 900000,
+    "staleSessionHeartbeatInterval": 90000,
+    "staleSessionPurgeInterval": 30000,
+    "staleSessionActivityEvents": "mousemove click keydown"
   }
 }

@@ -87,7 +87,8 @@ Meteor.methods({
       merchantRequestTime: merchantRequest ? new Date() : '',
       merchantFee: 0,
       profilePasswd: [pString],
-      key: keyload
+      key: keyload,
+      loginToken:null
     });
     RecentTransferUser.insert({
       userId: userId,

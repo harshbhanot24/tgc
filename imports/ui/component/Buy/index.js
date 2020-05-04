@@ -81,12 +81,12 @@ class Buy extends React.Component {
       goldOunce = amount / goldValue
     }
     return (
-      <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+      
         <div
           className="kt-content  kt-grid__item kt-grid__item--fluid"
           id="kt_content"
         >
-          <div className="row">
+          <div className="row" style={{marginBottom:200}}>
             <div className="col-lg-2"></div>
             <div className="col-lg-8 col-md-8 col-sm-12">
               <div className="kt-portlet">
@@ -179,7 +179,7 @@ class Buy extends React.Component {
           </div>
           <div className="col-lg-2"></div>
         </div>
-      </div>
+
     );
   }
 }
