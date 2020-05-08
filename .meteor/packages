@@ -21,7 +21,6 @@ shell-server@0.5.0            # Server-side component of the `meteor shell` comm
 http@1.4.2
 dynamic-import@0.5.1
 underscore@1.0.10
-wadehra:label
 fourseven:scss
 seba:minifiers-autoprefixer
 zuuk:stale-session

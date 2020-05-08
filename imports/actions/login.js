@@ -183,31 +183,28 @@ export function login(data) {
       } else {
         const userData= encrypt(email+ "*_*"+ password);
         localStorage.setItem("marketPlaceToken", userData);
-        localStorage.removeItem("isLogin");
-        const marketPlaceWindow = window.open(
-          `http://192.241.152.237:8000/login?key={userData}`,
-          "marketPlace",
-          "width=450, height=450"
-        );
+         Meteor.subscribe("profile");
+         Meteor.subscribe("Multiplier");
+         Meteor.subscribe("balance");
+         dispatch(getTodayTJSent);
+         dispatch(getTodayTJReceive);
+         dispatch({
+           type: LOGIN_SUCCESS,
+           user: Meteor.user(),
+         });
+        if (data.autoClose && data.autoClose === false) {
+          const marketPlaceWindow = window.open(
+            `http://192.241.152.237:8000/login?key=${userData}&autoClose=true`,
+            "marketPlace",
+            "width=450, height=450"
+          );
+        } else if (data.autoClose && data.autoClose === true) {
+          const marketPlaceURL = `http://192.241.152.237:8000/login?key=${userData}&autoClose=false`;
+          window.location = marketPlaceURL;
+        }
+    
        
-        let CheckisMarketPlaceLogin = setInterval(() => {
-           console.log("checkIsLogin: is called");
-           if (localStorage.getItem("isLogin")) {
-             console.log("checkIsLogin: is called again");
-             marketPlaceWindow.close();
-             clearInterval(CheckisMarketPlaceLogin);
-           }
-         },2000);
        
-        Meteor.subscribe("profile");
-        Meteor.subscribe("Multiplier");
-        Meteor.subscribe("balance");
-        dispatch(getTodayTJSent);
-        dispatch(getTodayTJReceive);
-        dispatch({
-          type: LOGIN_SUCCESS,
-          user: Meteor.user(),
-        });
         // if (Meteor.user().profile.staff != undefined || Meteor.user().profile.admin != undefined) {
         //   Router.go('sdashboard');
         // } else Router.go('dashboard');

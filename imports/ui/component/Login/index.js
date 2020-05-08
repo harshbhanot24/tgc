@@ -18,6 +18,9 @@ const validateForm = errors => {
 class Login extends React.Component {
   constructor(props) {
     super(props);
+    const urlParams = new URLSearchParams(window.location.search);
+    this.autoClose = urlParams.get("autoClose");
+    console.log(' this.autoClose : ',  this.autoClose );
     this.state = { email: "", password: "",
       errors: {
         email: "",
@@ -56,11 +59,13 @@ class Login extends React.Component {
   }
   handleSubmit = (event) => {
     event.preventDefault();
+    
     if(validateForm(this.state.errors)) {
-      const {email, password} = this.state;
+      const {email, password,autoClose=true } = this.state;
       this.props.login({
         email,
-        password
+        password,
+        autoClose
       });
     }else{
       console.error('Invalid Form')
