@@ -2,7 +2,7 @@ import {
   Meteor
 } from 'meteor/meteor'
 import UTILS from '../util/index';
-
+import JSEncrypt from "jsencrypt";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 export const LOGIN_BEGIN = "LOGIN_BEGIN"
 export const LOGIN_RESET = "LOGIN_RESET"
@@ -23,6 +23,20 @@ const {
   isValidPassword
 } = UTILS;
 
+const encrypt = (val) => {
+  let jsEncrypt = new JSEncrypt();
+  jsEncrypt.setPublicKey(`-----BEGIN PUBLIC KEY-----
+              MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmK+ODWW8zJd1hAw/YgYJ4B6bk
+              0SSKWaGwxjsrsnQ4c9/a8KrK9el/G13Gry9sPlxGEwzCAvRLH9myDaW3zcMVmkTG
+              TQCdtVBSZqt3wpbA5GSiODoTZ3G3+/G8UVUE9t5SI1g50c7CUuK6DRIBNH6xfLIF
+              3ZEVunJXo8NBE+apAwIDAQAB
+              -----END PUBLIC KEY-----`); 
+ return jsEncrypt.encrypt(val);
+}; 
+
+
+
+
 export function resetPassword(data) {
   return dispatch => {
     const {
@@ -36,7 +50,7 @@ export function resetPassword(data) {
     if (!isValidPassword(password, '')) {
       dispatch({
         type: RESET_FAILED,
-        errorMessage: 'Passowrd must be atleast 7 character long alphanumeric.'
+        errorMessage: 'Password must be atleast 7 character long alphanumeric.'
       });
       return;
     }
@@ -103,7 +117,45 @@ export function resetLogin() {
     })
   }
 }
-
+export function loginWithToken(token){
+  console.log('token:in fucntion is  ', token);
+  
+     return (dispatch) => {
+       dispatch({
+         type: LOGIN_BEGIN,
+       });
+     
+       Meteor.loginWithToken(token, function (error) {
+         if (error) {
+           console.log('error: ', error);
+           // if (error.reason === "Not Verified") {
+           //   Router.go('verify');
+           // }
+           dispatch({
+             errorCode: error.error,
+             type: LOGIN_FAILED,
+             errorMessage: error.reason,
+           });
+         }
+          else {
+           console.log("login sucessful");
+           Meteor.subscribe("profile");
+           Meteor.subscribe("Multiplier");
+           Meteor.subscribe("balance");
+           dispatch(getTodayTJSent);
+           dispatch(getTodayTJReceive);
+           dispatch({
+             type: LOGIN_SUCCESS,
+             user: Meteor.user(),
+           });
+           // if (Meteor.user().profile.staff != undefined || Meteor.user().profile.admin != undefined) {
+           //   Router.go('sdashboard');
+           // } else Router.go('dashboard');
+         }
+       });
+     };
+  
+}
 export function login(data) {
   return dispatch => {
     dispatch({
@@ -118,7 +170,7 @@ export function login(data) {
       });
       return;
     }
-    Meteor.loginWithPassword(email, password, function(error) {
+    Meteor.loginWithPassword(email, password, function (error) {
       if (error) {
         // if (error.reason === "Not Verified") {
         //   Router.go('verify');
@@ -126,17 +178,35 @@ export function login(data) {
         dispatch({
           errorCode: error.error,
           type: LOGIN_FAILED,
-          errorMessage: error.reason
+          errorMessage: error.reason,
         });
       } else {
-        Meteor.subscribe('profile');
-        Meteor.subscribe('Multiplier');
-        Meteor.subscribe('balance');
+        const userData= encrypt(email+ "*_*"+ password);
+        localStorage.setItem("marketPlaceToken", userData);
+        localStorage.removeItem("isLogin");
+        const marketPlaceWindow = window.open(
+          `http://192.241.152.237:8000/login?key={userData}`,
+          "marketPlace",
+          "width=450, height=450"
+        );
+       
+        let CheckisMarketPlaceLogin = setInterval(() => {
+           console.log("checkIsLogin: is called");
+           if (localStorage.getItem("isLogin")) {
+             console.log("checkIsLogin: is called again");
+             marketPlaceWindow.close();
+             clearInterval(CheckisMarketPlaceLogin);
+           }
+         },2000);
+       
+        Meteor.subscribe("profile");
+        Meteor.subscribe("Multiplier");
+        Meteor.subscribe("balance");
         dispatch(getTodayTJSent);
         dispatch(getTodayTJReceive);
         dispatch({
           type: LOGIN_SUCCESS,
-          user: Meteor.user()
+          user: Meteor.user(),
         });
         // if (Meteor.user().profile.staff != undefined || Meteor.user().profile.admin != undefined) {
         //   Router.go('sdashboard');

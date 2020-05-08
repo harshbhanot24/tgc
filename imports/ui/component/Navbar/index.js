@@ -16,6 +16,7 @@ class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.marketPlaceUrl=`http://192.241.152.237:8000/login?key=${localStorage.getItem("marketPlaceToken")}`;
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.user && !nextProps.user) {
@@ -165,7 +166,7 @@ class Navbar extends React.Component {
                         aria-haspopup="true"
                       >
                         <a
-                          href="http://192.241.152.237:8000"
+                          href={this.marketPlaceUrl}
                           className="kt-menu__link "
                         >
                           <span className="kt-menu__link-text">

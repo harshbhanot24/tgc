@@ -57,7 +57,9 @@ class Router extends React.Component {
     super(props);
     this.state = {};
   }
+
   componentWillMount() {
+
     if (Meteor.userId() && !this.props.user.role) {
       this.props.loginSuccess();
     }
@@ -267,7 +269,7 @@ function mapDispatchToProps(dispatch) {
     loginSuccess: () => dispatch(loginSuccess()),
     getTodayTJSent: () => dispatch(getTodayTJSent()),
     getTransaction: () => dispatch(getTransaction()),
-    getTodayTJReceive: () => dispatch(getTodayTJReceive())
+    getTodayTJReceive: () => dispatch(getTodayTJReceive()),
   };
 }
 

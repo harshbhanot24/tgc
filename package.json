@@ -32,6 +32,7 @@
     "good-listener": "^1.2.2",
     "jqlite": "^0.2.42",
     "jquery": "^3.4.1",
+    "jsencrypt": "^3.0.0-rc.1",
     "json-2-csv": "^2.4.0",
     "lodash": "^4.17.15",
     "markdown": "^0.5.0",

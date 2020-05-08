@@ -1,78 +1,243 @@
-import React from 'react';
-import { connect } from 'react-redux'
-import {Link} from 'react-router-dom';
-import { NotificationManager } from "react-notifications";
-import { login } from '../../../actions/login';
-import './style.scss';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { withTracker } from "meteor/react-meteor-data";
+import { login, resetLogin } from "../../../actions/login";
+import "./style.scss";
 
-class Home extends React.Component {
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
+const validateForm = (errors) => {
+  let valid = true;
+  Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+  return valid;
+};
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: "",
+      errors: {
+        email: "",
+        password: "",
+      },
+    };
   }
-  handleLogin(e) {
-    e.preventDefault();
-    const email = this.state.email;
-    const password = this.state.password;
-    this.props.login({
-      email,
-      password
-    })
-  }
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.user.userId) {
-      this.setState({
-        email: '',
-        password: ''
-      })
-    }
-    const {error, errorMessage, inProgress} = nextProps.user;
-    if(!this.props.error && error) {
-      NotificationManager.error(errorMessage,'',2000);
-    }
-  }
-  render() {
-    return (
-      <div className="home-container">
-          <div className="jumbotron homejumbo">
-            <div className="container text-center">
-                <h2>Start Using Texas Gold Card</h2>
-                <form className="navbar-form homesignin" role="form" onSubmit={this.handleLogin.bind(this)}>
-                    <div className="input-group">
-                        <span className="input-group-addon"><i className="fa fa-user"></i></span>
-                        <input id="email" type="email" className="form-control" name="email" value={this.state.email} onChange={(e)=> this.setState({email:e.target.value})} placeholder="Email Address"/>
-                    </div>
-                    <div className="input-group">
-                        <span className="input-group-addon"><i className="fa fa-lock"></i></span>
-                        <input id="password" type="password" onChange={(e)=> this.setState({password:e.target.value})} className="form-control" name="password" value={this.state.password} placeholder="Password"/>
-                    </div>
-                    <br />
-                    <br />
-                    <button type="submit" className="btn btn-primary">Login</button> &nbsp;
-                    <Link to="/register" className="btn btn-info">Register</Link>
-              </form>
 
+  handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = this.state.errors;
+
+    switch (name) {
+      case "email":
+        errors.email = validEmailRegex.test(value) ? "" : "Email is not valid!";
+        break;
+      case "password":
+        errors.password =
+          value.length < 8 ? "Password must be 8 characters long!" : "";
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ errors, [name]: value });
+  };
+  componentWillMount() {
+    const { resetLogin } = this.props;
+    resetLogin();
+  }
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if (validateForm(this.state.errors)) {
+      const { email, password } = this.state;
+      this.props.login({
+        email,
+        password,
+      });
+    } else {
+      console.error("Invalid Form");
+    }
+  };
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.user.error && nextProps.user.error) {
+      this.setState({
+        password: "",
+      });
+    }
+  }
+
+  render() {
+    const { errors } = this.state;
+    const styles = { backgroundImage: `url("/assets/media/bg/bg-4.jpg")` };
+    const { error, errorMessage, inProgress } = this.props.user;
+    const fullSizeDiv = {
+      width: "100%",
+      minHeight: "100vh",
+      maxHeight: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      margin: "0 auto",
+    };
+    return (
+      <div className="kt-grid kt-grid--ver kt-grid--root" style={fullSizeDiv}>
+        <div
+          className="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1"
+          id="kt_login"
+        >
+          <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
+            <div
+              className="kt-grid__item kt-grid__item--order-tablet-and-mobile-2  kt-grid kt-grid--hor kt-login__aside"
+              style={styles}
+            >
+              <div className="kt-grid__item">
+                <a href="#" className="kt-login__logo">
+                  <img src="/assets/media/logos/logo-4.png" />
+                </a>
+              </div>
+              <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
+                <div className="kt-grid__item kt-grid__item--middle">
+                  <h3 className="kt-login__title">
+                    Welcome to Thomas Jefferson Gold!
+                  </h3>
+                  <h4 className="kt-login__subtitle">
+                    Please Login to your account or if you don't have account,
+                    click on Sign uP to join our community.
+                  </h4>
+                </div>
+              </div>
+              <div className="kt-grid__item">
+                <div className="kt-login__info">
+                  <div className="kt-login__copyright">
+                    &copy 2020 Thomas Jefferson Gold
+                  </div>
+                  <div className="kt-login__menu">
+                    <a href="#" className="kt-link">
+                      Privacy
+                    </a>
+                    <a href="#" className="kt-link">
+                      Legal
+                    </a>
+                    <a href="#" className="kt-link">
+                      Contact
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
+            <div className="kt-grid__item kt-grid__item--fluid  kt-grid__item--order-tablet-and-mobile-1  kt-login__wrapper">
+              <div className="kt-login__head">
+                <span className="kt-login__signup-label">
+                  Don't have an account yet?
+                </span>
+                &nbsp;&nbsp;
+                <Link to="/register" className="kt-link kt-login__signup-link">
+                  Sign Up!
+                </Link>
+              </div>
+
+              <div className="kt-login__body">
+                <div className="kt-login__form">
+                  <div className="kt-login__title">
+                    <h3>Sign In</h3>
+                  </div>
+
+                  <form className="kt-form" onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="Email"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                        noValidate
+                      />
+                    </div>
+                    {errors.email.length > 0 && (
+                      <span className="error">{errors.email}</span>
+                    )}
+                    <div className="form-group">
+                      <input
+                        className="form-control"
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                        noValidate
+                      />
+                      {errors.password.length > 0 && (
+                        <span className="error">{errors.password}</span>
+                      )}
+                    </div>
+
+                    <div className="kt-login__actions">
+                      <Link
+                        to="/forgot"
+                        className="kt-link kt-login__link-forgot"
+                      >
+                        Forgot Password ?
+                      </Link>
+                      <button
+                        id="kt_login_signin_submit"
+                        className="btn btn-primary btn-elevate kt-login__btn-primary"
+                        disabled={inProgress}
+                        type="submit"
+                      >
+                        Sign In
+                      </button>
+                    </div>
+                    {error ? (
+                      <div>
+                        <span
+                          id="login-alert"
+                          className="alert alert-danger col-sm-12"
+                        >
+                          {errorMessage}
+                        </span>
+                      </div>
+                    ) : null}
+                  </form>
+
+                  <div className="kt-login__divider">
+                    <div className="kt-divider">
+                      <span></span>
+                      <span>OR</span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 }
-
+const LoginContainer = withTracker((props) => ({
+  userData: Meteor.user(),
+}))(Login);
 
 function mapStateToProps(state) {
   return {
-    user: state.user
-  }
+    user: state.user,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: (data)=> {dispatch(login(data))}
-  }
+    login: (data) => {
+      dispatch(login(data));
+    },
+    resetLogin: () => {
+      dispatch(resetLogin());
+    },
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
