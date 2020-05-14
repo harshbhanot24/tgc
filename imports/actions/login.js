@@ -192,13 +192,13 @@ export function login(data) {
            type: LOGIN_SUCCESS,
            user: Meteor.user(),
          });
-        if (data.autoClose && data.autoClose === false) {
+        if (data.autoClose && data.autoClose === true) {
           const marketPlaceWindow = window.open(
             `http://192.241.152.237:8000/login?key=${userData}&autoClose=true`,
             "marketPlace",
             "width=450, height=450"
           );
-        } else if (data.autoClose && data.autoClose === true) {
+        } else if (data.autoClose && data.autoClose === false) {
           const marketPlaceURL = `http://192.241.152.237:8000/login?key=${userData}&autoClose=false`;
           window.location = marketPlaceURL;
         }
