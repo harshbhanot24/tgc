@@ -5,14 +5,12 @@ import { withTracker } from "meteor/react-meteor-data";
 import { login, resetLogin } from "../../../actions/login";
 import "./style.scss";
 
-
-
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
-const validateForm = errors => {
+const validateForm = (errors) => {
   let valid = true;
-  Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+  Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
   return valid;
 };
 class Login extends React.Component {
@@ -20,11 +18,13 @@ class Login extends React.Component {
     super(props);
     const urlParams = new URLSearchParams(window.location.search);
     this.autoClose = urlParams.get("autoClose");
-    this.state = { email: "", password: "",
+    this.state = {
+      email: "",
+      password: "",
       errors: {
         email: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   }
 
@@ -34,47 +34,42 @@ class Login extends React.Component {
     let errors = this.state.errors;
 
     switch (name) {
-      case 'email': 
-        errors.email =
-          validEmailRegex.test(value)
-            ? ''
-            : 'Email is not valid!';
+      case "email":
+        errors.email = validEmailRegex.test(value) ? "" : "Email is not valid!";
         break;
-      case 'password': 
-        errors.password = 
-          value.length < 8
-            ? 'Password must be 8 characters long!'
-            : '';
+      case "password":
+        errors.password =
+          value.length < 8 ? "Password must be 8 characters long!" : "";
         break;
       default:
         break;
     }
 
-    this.setState({errors, [name]: value});
-  }
+    this.setState({ errors, [name]: value });
+  };
   componentWillMount() {
     const { resetLogin } = this.props;
     resetLogin();
   }
   handleSubmit = (event) => {
     event.preventDefault();
-    
-    if(validateForm(this.state.errors)) {
-     let isWindow= this.autoClose? this.autoClose : true;
-      const {email, password } = this.state;
+
+    if (validateForm(this.state.errors)) {
+      let isWindow = this.autoClose ? this.autoClose : true;
+      const { email, password } = this.state;
       this.props.login({
         email,
         password,
         autoClose: isWindow,
       });
-    }else{
-      console.error('Invalid Form')
+    } else {
+      console.error("Invalid Form");
     }
-    }
+  };
   componentWillReceiveProps(nextProps) {
     if (!this.props.user.error && nextProps.user.error) {
       this.setState({
-        password: ""
+        password: "",
       });
     }
   }
@@ -83,15 +78,15 @@ class Login extends React.Component {
     const { errors } = this.state;
     const styles = { backgroundImage: `url("/assets/media/bg/bg-4.jpg")` };
     const { error, errorMessage, inProgress } = this.props.user;
-    const fullSizeDiv={ 
-    width: "100%",
-    minHeight: "100vh",
-    maxHeight: "100%",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    margin: "0 auto"
-}
+    const fullSizeDiv = {
+      width: "100%",
+      minHeight: "100vh",
+      maxHeight: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      margin: "0 auto",
+    };
     return (
       <div className="kt-grid kt-grid--ver kt-grid--root" style={fullSizeDiv}>
         <div
@@ -229,24 +224,24 @@ class Login extends React.Component {
     );
   }
 }
-const LoginContainer = withTracker(props => ({
-  userData: Meteor.user()
+const LoginContainer = withTracker((props) => ({
+  userData: Meteor.user(),
 }))(Login);
 
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: state.user,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: data => {
+    login: (data) => {
       dispatch(login(data));
     },
     resetLogin: () => {
       dispatch(resetLogin());
-    }
+    },
   };
 }
 

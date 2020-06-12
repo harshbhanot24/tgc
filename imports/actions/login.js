@@ -181,7 +181,7 @@ export function login(data) {
           errorMessage: error.reason,
         });
       } else {
-        const userData= encrypt(email+ "*_*"+ password);
+        let userData= encrypt(email+ "*_*"+ password);  
         localStorage.setItem("marketPlaceToken", userData);
          Meteor.subscribe("profile");
          Meteor.subscribe("Multiplier");
@@ -192,15 +192,20 @@ export function login(data) {
            type: LOGIN_SUCCESS,
            user: Meteor.user(),
          });
+         let urlT = encodeURIComponent(
+           `key=${userData}&autoClose=true`
+         );
+         let urlF = encodeURIComponent(
+           `key=${userData}&autoClose=false`
+         );
         if (data.autoClose && data.autoClose === true) {
           const marketPlaceWindow = window.open(
-            `http://192.241.152.237:8000/login?key=${userData}&autoClose=true`,
+            `http://192.241.152.237:8000/login?${urlT}`,
             "marketPlace",
             "width=450, height=450"
           );
         } else if (data.autoClose && data.autoClose === false) {
-          const marketPlaceURL = `http://192.241.152.237:8000/login?key=${userData}&autoClose=false`;
-          window.location = marketPlaceURL;
+          window.location = `http://192.241.152.237:8000/login?${urlF}`;
         }
     
        

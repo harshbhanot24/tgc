@@ -16,7 +16,11 @@ class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.marketPlaceUrl=`http://192.241.152.237:8000/login?key=${localStorage.getItem("marketPlaceToken")}`;
+    this.marketPlaceUrl = encodeURI(
+      `http://192.241.152.237:8000/login?key=${localStorage.getItem(
+        "marketPlaceToken"
+      )}&autoClose=false`
+    );
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.user && !nextProps.user) {
